@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/modules/paynl_paymentmethods/paynl.css" />
+<link rel="stylesheet" href="/modules/paynl_paymentmethods/css/paynl.css" />
 <link rel="stylesheet" href="https://www.pay.nl/style/payment_profiles/75x75/sprite.css" />
 
 
