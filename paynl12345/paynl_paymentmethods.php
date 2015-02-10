@@ -128,7 +128,7 @@ class paynl_paymentmethods extends PaymentModule {
         $arrValidateOnStart = Configuration::get('PAYNL_VALIDATE_ON_START');
         if (!empty($arrValidateOnStart)) {
             $arrValidateOnStart = unserialize($arrValidateOnStart);
-            if (isset($arrValidateOnStart[$paymentMethodId]) && $arrValidateOnStart[$paymentMethodId] == 1) {
+            if (Tools::getIsset($arrValidateOnStart[$paymentMethodId]) && $arrValidateOnStart[$paymentMethodId] == 1) {
                 return true;
             }
         }
@@ -168,7 +168,7 @@ class paynl_paymentmethods extends PaymentModule {
 
         $result = $apiService->doRequest();
 
-        if (isset($result['paymentOptions'][$paymentMethodId])) {
+        if (Tools::getIsset($result['paymentOptions'][$paymentMethodId])) {
             return $result['paymentOptions'][$paymentMethodId]['name'];
         } else {
             return false;
@@ -216,9 +216,9 @@ class paynl_paymentmethods extends PaymentModule {
 
             // Only the profiles of the target country should remain in this array :). (Only when the count is > 0, otherwise it might indicate problems)
             if (count($countryExceptions) > 0) {
-                if (isset($countryExceptions[$countryid])) {
+                if (Tools::getIsset($countryExceptions[$countryid])) {
                     foreach ($activeProfiles as $id => $profile) {
-                        if (!isset($countryExceptions[$countryid][$profile['id']])) {
+                        if (!Tools::getIsset($countryExceptions[$countryid][$profile['id']])) {
                             unset($activeProfiles[$id]);
                         }
                     }
@@ -273,8 +273,8 @@ class paynl_paymentmethods extends PaymentModule {
         $this->_html = '<h2>' . $this->displayName . '</h2>';
 
 
-        if (isset($_POST['submitPaynl'])) {
-            if (!isset($_POST['api']))
+        if (Tools::getIsset($_POST['submitPaynl'])) {
+            if (!Tools::getIsset($_POST['api']))
                 $_POST['api'] = 1;
 
             if (!sizeof($this->_postErrors)) {
@@ -283,13 +283,13 @@ class paynl_paymentmethods extends PaymentModule {
                 Configuration::updateValue('PAYNL_WAIT', $_POST['wait']);
                 Configuration::updateValue('PAYNL_SUCCESS', $_POST['success']);
                 Configuration::updateValue('PAYNL_CANCEL', $_POST['cancel']);
-                if (isset($_POST['enaC'])) {
+                if (Tools::getIsset($_POST['enaC'])) {
                     Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', serialize($_POST['enaC']));
                 }
-                if (isset($_POST['enaO'])) {
+                if (Tools::getIsset($_POST['enaO'])) {
                     Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', serialize($_POST['enaO']));
                 }
-                if (isset($_POST['payExtraCosts'])) {
+                if (Tools::getIsset($_POST['payExtraCosts'])) {
                     //kommas voor punten vervangen, en zorgen dat het allemaal getallen zijn
                     $arrExtraCosts = array();
 
@@ -304,7 +304,7 @@ class paynl_paymentmethods extends PaymentModule {
                     }
                     Configuration::updateValue('PAYNL_PAYMENT_EXTRA_COSTS', serialize($arrExtraCosts));
                 }
-                if (isset($_POST['validateOnStart'])) {
+                if (Tools::getIsset($_POST['validateOnStart'])) {
                     Configuration::updateValue('PAYNL_VALIDATE_ON_START', serialize($_POST['validateOnStart']));
                 }
 
@@ -480,7 +480,7 @@ class paynl_paymentmethods extends PaymentModule {
             $exceptions.= '</tr>';
 
             foreach ($countries as $countryid => $country) {
-                if (!isset($this->country[$countryid])) {
+                if (!Tools::getIsset($this->country[$countryid])) {
                     continue;
                 }
 
@@ -492,7 +492,7 @@ class paynl_paymentmethods extends PaymentModule {
 
                     if (!$forceProfilesEnable) {
 
-                        $exceptions.='<input type="checkbox" name="enaC[' . $countryid . '][' . $profile['id'] . ']" value="' . $profile['name'] . '"' . (isset($profilesEnable[$countryid][$profile['id']]) ? ' checked="checked"' : '') . ' />';
+                        $exceptions.='<input type="checkbox" name="enaC[' . $countryid . '][' . $profile['id'] . ']" value="' . $profile['name'] . '"' . (Tools::getIsset($profilesEnable[$countryid][$profile['id']]) ? ' checked="checked"' : '') . ' />';
                     } else {
                         $exceptions.='<input type="checkbox" name="enaC[' . $countryid . '][' . $profile['id'] . ']" value="' . $profile['name'] . '" checked="checked" />';
                     }
@@ -516,7 +516,7 @@ class paynl_paymentmethods extends PaymentModule {
 
                 $exceptions.='<select name="enaO[' . $profile['id'] . ']">';
                 $value = '';
-                if (isset($profilesOrder[$profile['id']])) {
+                if (Tools::getIsset($profilesOrder[$profile['id']])) {
                     $value = $profilesOrder[$profile['id']];
                 }
 
@@ -541,7 +541,7 @@ class paynl_paymentmethods extends PaymentModule {
                 $exceptions .= '<td><input name="payExtraCosts[' . $profile['id'] . '][max]"  type="text" value="' . $max . '" /></td>';
 
                 $validateOnStartChecked = '';
-                if (isset($validateOnStart[$profile['id']]) && $validateOnStart[$profile['id']] == 1) {
+                if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profile['id']] == 1) {
                     $validateOnStartChecked = "checked='checked'";
                 }
 
