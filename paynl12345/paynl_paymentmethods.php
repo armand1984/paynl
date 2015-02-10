@@ -187,7 +187,6 @@ class paynl_paymentmethods extends PaymentModule {
         $intOrderAmount = round(number_format(Tools::convertPrice($params['cart']->getOrderTotal(), $objCurrency), 2, '.', '') * 100);
 
         if ($this->validateOrderData($intOrderAmount)) {
-            global $smarty;
 
             $token = Configuration::get('PAYNL_TOKEN');
             $serviceId = Configuration::get('PAYNL_SERVICE_ID');
@@ -243,14 +242,14 @@ class paynl_paymentmethods extends PaymentModule {
             }
             //var_dump($activeProfiles);
 
-            $smarty->assign(array(
+            $this->context->smarty->assign(array(
                 'this_path' => $this->_path,
                 'profiles' => $activeProfiles,
                 //'banks' => $paynl->getIdealBanks(),
                 'this_path_ssl' => (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8') . __PS_BASE_URI__ . 'modules/' . $this->name . '/'
             ));
 
-            return $this->display(_PS_MODULE_DIR_ . '/' . $this->name . '/' . $this->name . '.php', 'payment.tpl');
+            return $this->display(_PS_MODULE_DIR_ . '/' . $this->name . '/' . $this->name . '.php', 'views/templates/hook/payment.tpl');
         } else {
             return;
         }
@@ -350,7 +349,6 @@ class paynl_paymentmethods extends PaymentModule {
     }
 
     public function displayFormSettings() {
-        global $cookie;
 
         $arrConfig = array();
         $arrConfig[] = 'PAYNL_TOKEN';
@@ -376,7 +374,7 @@ class paynl_paymentmethods extends PaymentModule {
         $cancel = array_key_exists('cancel', $_POST) ? $_POST['cancel'] : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
 
         // Get states
-        $states = OrderState::getOrderStates(intval($cookie->id_lang));
+        $states = OrderState::getOrderStates(intval($this->context->cookie->id_lang));
 
         $osWait = '<select name="wait">';
         foreach ($states AS $state) {
@@ -424,7 +422,7 @@ class paynl_paymentmethods extends PaymentModule {
 
 
 
-            $countries = Country::getCountries((int) ($cookie->id_lang));
+            $countries = Country::getCountries((int) ($this->context->cookie->id_lang));
 
 
 
