@@ -30,7 +30,7 @@ class Pay_Api_Start extends Pay_Api {
     private $_products = array();
 
     public function setCurrency($currency){
-        $this->_currency = strtoupper($currency);
+        $this->_currency = Tools::strtoupper($currency);
     }
     public function setPromotorId($promotorId){
         $this->_promotorId = $promotorId;
@@ -70,7 +70,7 @@ class Pay_Api_Start extends Pay_Api {
         $quantity = $quantity * 1;
 
         //description mag maar 45 chars lang zijn
-        $description = substr($description, 0, 45);
+        $description = Tools::substr($description, 0, 45);
 
         $arrProduct = array(
             'productId' => $id,

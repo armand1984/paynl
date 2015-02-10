@@ -429,7 +429,7 @@ class paynl_paymentmethods extends PaymentModule {
 
             $forceProfilesEnable = false;
             $profilesEnable = (array_key_exists('PAYNL_COUNTRY_EXCEPTIONS', $conf) ? $conf['PAYNL_COUNTRY_EXCEPTIONS'] : '');
-            if (strlen($profilesEnable) == 0) {
+            if (Tools::strlen($profilesEnable) == 0) {
                 $profilesEnable = array();
                 $forceProfilesEnable = true;
             } else {
@@ -444,7 +444,7 @@ class paynl_paymentmethods extends PaymentModule {
             $extraCosts = (array_key_exists('PAYNL_PAYMENT_EXTRA_COSTS', $conf) ? $conf['PAYNL_PAYMENT_EXTRA_COSTS'] : '');
             $validateOnStart = (array_key_exists('PAYNL_VALIDATE_ON_START', $conf) ? $conf['PAYNL_VALIDATE_ON_START'] : '');
 
-            if (strlen($profilesOrder) == 0) {
+            if (Tools::strlen($profilesOrder) == 0) {
                 $profilesOrder = array();
             } else {
                 $profilesOrder = @unserialize($profilesOrder);
@@ -453,7 +453,7 @@ class paynl_paymentmethods extends PaymentModule {
                 }
             }
 
-            if (strlen($extraCosts) == 0) {
+            if (Tools::strlen($extraCosts) == 0) {
                 $extraCosts = array();
             } else {
                 $extraCosts = @unserialize($extraCosts);
@@ -461,7 +461,7 @@ class paynl_paymentmethods extends PaymentModule {
                     $extraCosts = array();
                 }
             }
-            if (strlen($validateOnStart) == 0) {
+            if (Tools::strlen($validateOnStart) == 0) {
                 $validateOnStart = array();
             } else {
                 $validateOnStart = @unserialize($validateOnStart);

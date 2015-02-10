@@ -147,7 +147,7 @@ class Pay_Api {
             }
             curl_close($ch);
 
-            $arrResult = json_decode($result, true);
+            $arrResult = Tools::json_decode($result, true);
 
             if ($this->validateResult($arrResult)) {
                 return $this->_processResult($arrResult);

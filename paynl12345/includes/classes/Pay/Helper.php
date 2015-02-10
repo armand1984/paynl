@@ -87,7 +87,7 @@ class Pay_Helper {
         if(!empty($_SERVER['REQUEST_URI'])){
             $uri .= $_SERVER['REQUEST_URI'];
             $uriDir = $uri;
-            if(substr($uri, -4) == '.php'){
+            if(Tools::substr($uri, -4) == '.php'){
                 $uriDir = dirname($uri);
             }
             

@@ -11,7 +11,7 @@ class Pay_Helper_Transaction {
             'amount' => (int)$amount,
             'currency' => $currency,
             'order_id' => $order_id,
-            'start_data' =>  $db->escape(json_encode($startData)),
+            'start_data' =>  $db->escape(Tools::json_encode($startData)),
         );
 
         $db->insert('pay_transactions', $data);
