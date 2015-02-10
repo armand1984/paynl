@@ -22,6 +22,9 @@ class paynl_paymentmethods extends PaymentModule {
         $this->displayName = $this->l('Pay.nl Payment methods');
         $this->description = $this->l('Accept payments by Pay.nl');
         $this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+        
+        if (_PS_VERSION_ < '1.5')
+        	require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
     }
 
     public function validateOrderPay($id_cart, $id_order_state, $amount_paid, $extraCosts, $payment_method = 'Unknown', $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null) {
