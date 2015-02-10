@@ -1,5 +1,17 @@
 <?php
-//gewoon hard alle files die ik nodig heb includen, oudere versies van prestashop ondersteunen spl_autoload_register niet
+/**
+ * LANDING PAGES
+ *
+ * PHP version 5
+ *
+ * @category  Prestashop module
+ * @package   landingpages
+ * @author    Brandweb <office@brandweb.ro>
+ * @copyright 2015 Brandweb
+ * @license   GNU General Public License version 2
+ * @version   1.0
+ */
+
 require_once dirname(__FILE__).'/Pay/Api.php';
 require_once dirname(__FILE__).'/Pay/Exception.php';
 require_once dirname(__FILE__).'/Pay/Helper.php';

@@ -1,7 +1,17 @@
 <?php
 /**
- * Class to use for starting a transaction
+ * LANDING PAGES
+ *
+ * PHP version 5
+ *
+ * @category  Prestashop module
+ * @package   landingpages
+ * @author    Brandweb <office@brandweb.ro>
+ * @copyright 2015 Brandweb
+ * @license   GNU General Public License version 2
+ * @version   1.0
  */
+
 class Pay_Api_Start extends Pay_Api {
 
     protected $_version = 'v3';

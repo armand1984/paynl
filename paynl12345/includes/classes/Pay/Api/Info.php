@@ -1,7 +1,17 @@
 <?php
 /**
- * Class to retrieve the data of a transaction
+ * LANDING PAGES
+ *
+ * PHP version 5
+ *
+ * @category  Prestashop module
+ * @package   landingpages
+ * @author    Brandweb <office@brandweb.ro>
+ * @copyright 2015 Brandweb
+ * @license   GNU General Public License version 2
+ * @version   1.0
  */
+
 class Pay_Api_Info extends Pay_Api {
 
     /**
