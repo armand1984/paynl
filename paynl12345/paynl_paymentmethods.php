@@ -1,4 +1,16 @@
 <?php
+/**
+ * PAYNL PAYMENT METHODS
+ *
+ * PHP version 5
+ *
+ * @category  Prestashop module
+ * @package   paynl_paymentmethods
+ * @author    Novisites <info@novisites.nl>
+ * @copyright 2015 Novisites
+ * @license   GNU General Public License version 2
+ * @version   3.2.2
+ */
 
 if (!defined('_PS_VERSION_'))
     exit;
