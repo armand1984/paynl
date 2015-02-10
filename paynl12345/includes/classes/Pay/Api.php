@@ -133,29 +133,34 @@ class Pay_Api {
             $url = $this->_getApiUrl();
             $data = $this->_getPostData();
 
-            $strData = http_build_query($data);
+			$strData = http_build_query($data);
 
             $apiUrl = $url;
-
-            $ch = curl_init();
-            if ($this->_requestType == self::REQUEST_TYPE_GET) {
-                $apiUrl .= '?' . $strData;
-            } else {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $strData);
+			
+            if(function_exists('curl_version'))
+            {
+            
+	            $ch = curl_init();
+	            if ($this->_requestType == self::REQUEST_TYPE_GET) {
+	                $apiUrl .= '?' . $strData;
+	            } else {
+	                curl_setopt($ch, CURLOPT_POSTFIELDS, $strData);
+	            }
+	           
+	          
+	            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+	            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	
+	            $result = curl_exec($ch);
+				
+	
+	            if ($result == false) {
+	                //$error = curl_error($ch);
+	            }
+	            curl_close($ch);
+			
             }
-           
-          
-            curl_setopt($ch, CURLOPT_URL, $apiUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            $result = curl_exec($ch);
-
-
-            if ($result == false) {
-                //$error = curl_error($ch);
-            }
-            curl_close($ch);
-
+            
             $arrResult = Tools::json_decode($result, true);
 
             if ($this->validateResult($arrResult)) {
