@@ -12,7 +12,7 @@ class paynl_paymentmethods extends PaymentModule {
         $this->tab = 'payments_gateways';
         $this->version = '3.2.2';
         $this->_postErrors = array();
-
+        $this->author = 'Novisites';
         $this->currencies = true;
         $this->currencies_mode = 'radio';
 
