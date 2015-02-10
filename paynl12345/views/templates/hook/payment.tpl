@@ -1,3 +1,16 @@
+{**
+ * LANDING PAGES
+ *
+ * PHP version 5
+ *
+ * @category  Prestashop module
+ * @package   landingpages
+ * @author    Brandweb <office@brandweb.ro>
+ * @copyright 2015 Brandweb
+ * @license   GNU General Public License version 2
+ * @version   1.0
+ *}
+
 <link rel="stylesheet" href="/modules/paynl_paymentmethods/css/paynl.css" />
 <link rel="stylesheet" href="https://www.pay.nl/style/payment_profiles/75x75/sprite.css" />
 
