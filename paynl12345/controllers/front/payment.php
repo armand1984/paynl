@@ -63,7 +63,7 @@ class paynl_paymentmethodsPaymentModuleFrontController extends ModuleFrontContro
             $customer = new Customer($cart->id_customer);
             $total = (float) $cart->getOrderTotal(true, Cart::BOTH);
 
-            $orderStatus = Configuration::get('PAYNL_WAIT');
+            //$orderStatus = Configuration::get('PAYNL_WAIT');
             $module = $this->module;
 
             $currencyId = $this->context->currency->id;

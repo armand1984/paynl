@@ -106,14 +106,14 @@ class Pay_Helper_Transaction {
         $objOrder = Order::getOrderByCartId($cartId);
         //$objOrder = new Order($orderId);
 
-        $statusPending = Configuration::get('PAYNL_WAIT');
+        //$statusPending = Configuration::get('PAYNL_WAIT');
         $statusPaid = Configuration::get('PAYNL_SUCCESS');
         $statusCancel = Configuration::get('PAYNL_CANCEL');
 
 
         $id_order_state = '';
 
-        $paid = false;
+        //$paid = false;
 
         if ($stateText == 'PAID') {
             $id_order_state = $statusPaid;

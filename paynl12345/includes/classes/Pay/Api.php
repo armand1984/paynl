@@ -143,7 +143,7 @@ class Pay_Api {
 
 
             if ($result == false) {
-                $error = curl_error($ch);
+                //$error = curl_error($ch);
             }
             curl_close($ch);
 

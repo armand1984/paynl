@@ -186,7 +186,7 @@ class paynl_paymentmethods extends PaymentModule {
         $objCurrency = $this->getCurrency();
         $intOrderAmount = round(number_format(Tools::convertPrice($params['cart']->getOrderTotal(), $objCurrency), 2, '.', '') * 100);
 
-        if ($this->validateOrderData($intOrderAmount)) {
+        if ($this->validateOrderData()) {
 
             $token = Configuration::get('PAYNL_TOKEN');
             $serviceId = Configuration::get('PAYNL_SERVICE_ID');
@@ -370,11 +370,11 @@ class paynl_paymentmethods extends PaymentModule {
 
         $wait = array_key_exists('wait', Tools::getValue) ? Tools::getValue('wait') : (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
         $success = array_key_exists('success', Tools::getValue) ? Tools::getValue('success') : (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
-        $amountnotvalid = array_key_exists('amountnotvalid', Tools::getValue) ? Tools::getValue('amountnotvalid') : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
+        //$amountnotvalid = array_key_exists('amountnotvalid', Tools::getValue) ? Tools::getValue('amountnotvalid') : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
         $cancel = array_key_exists('cancel', Tools::getValue) ? Tools::getValue('cancel') : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
 
         // Get states
-        $states = OrderState::getOrderStates(intval($this->context->cookie->id_lang));
+        $states = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 
         $osWait = '<select name="wait">';
         foreach ($states AS $state) {
@@ -582,7 +582,7 @@ class paynl_paymentmethods extends PaymentModule {
     </form><br /><br />';
     }
 
-    protected function validateOrderData($intOrderAmount) {
+    protected function validateOrderData() {
         return true;
     }
 
