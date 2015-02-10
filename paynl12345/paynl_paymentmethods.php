@@ -273,27 +273,27 @@ class paynl_paymentmethods extends PaymentModule {
         $this->_html = '<h2>' . $this->displayName . '</h2>';
 
 
-        if (Tools::getIsset($_POST['submitPaynl'])) {
-            if (!Tools::getIsset($_POST['api']))
-                $_POST['api'] = 1;
+        if (Tools::getIsset(Tools::getValue('submitPaynl'))) {
+            if (!Tools::getIsset(Tools::getValue('api')))
+                Tools::getValue('api') = 1;
 
             if (!sizeof($this->_postErrors)) {
-                Configuration::updateValue('PAYNL_TOKEN', $_POST['paynltoken']);
-                Configuration::updateValue('PAYNL_SERVICE_ID', $_POST['service_id']);
-                Configuration::updateValue('PAYNL_WAIT', $_POST['wait']);
-                Configuration::updateValue('PAYNL_SUCCESS', $_POST['success']);
-                Configuration::updateValue('PAYNL_CANCEL', $_POST['cancel']);
-                if (Tools::getIsset($_POST['enaC'])) {
-                    Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', serialize($_POST['enaC']));
+                Configuration::updateValue('PAYNL_TOKEN', Tools::getValue('paynltoken'));
+                Configuration::updateValue('PAYNL_SERVICE_ID', Tools::getValue('service_id'));
+                Configuration::updateValue('PAYNL_WAIT', Tools::getValue('wait'));
+                Configuration::updateValue('PAYNL_SUCCESS', Tools::getValue('success'));
+                Configuration::updateValue('PAYNL_CANCEL', Tools::getValue('cancel'));
+                if (Tools::getIsset(Tools::getValue('enaC'))) {
+                    Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', serialize(Tools::getValue('enaC')));
                 }
-                if (Tools::getIsset($_POST['enaO'])) {
-                    Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', serialize($_POST['enaO']));
+                if (Tools::getIsset(Tools::getValue('enaO'))) {
+                    Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', serialize(Tools::getValue('enaO')));
                 }
-                if (Tools::getIsset($_POST['payExtraCosts'])) {
+                if (Tools::getIsset(Tools::getValue('payExtraCosts'))) {
                     //kommas voor punten vervangen, en zorgen dat het allemaal getallen zijn
                     $arrExtraCosts = array();
 
-                    foreach ($_POST['payExtraCosts'] as $paymentMethodId => $paymentMethod) {
+                    foreach (Tools::getValue('payExtraCosts') as $paymentMethodId => $paymentMethod) {
                         foreach ($paymentMethod as $type => $value) {
                             $value = str_replace(',', '.', $value);
                             $value = $value * 1;
@@ -304,8 +304,8 @@ class paynl_paymentmethods extends PaymentModule {
                     }
                     Configuration::updateValue('PAYNL_PAYMENT_EXTRA_COSTS', serialize($arrExtraCosts));
                 }
-                if (Tools::getIsset($_POST['validateOnStart'])) {
-                    Configuration::updateValue('PAYNL_VALIDATE_ON_START', serialize($_POST['validateOnStart']));
+                if (Tools::getIsset(Tools::getValue('validateOnStart'))) {
+                    Configuration::updateValue('PAYNL_VALIDATE_ON_START', serialize(Tools::getValue('validateOnStart')));
                 }
 
                 $this->displayConf();
@@ -365,13 +365,13 @@ class paynl_paymentmethods extends PaymentModule {
         $conf = Configuration::getMultiple($arrConfig);
 
 
-        $paynltoken = array_key_exists('paynltoken', $_POST) ? $_POST['paynltoken'] : (array_key_exists('PAYNL_TOKEN', $conf) ? $conf['PAYNL_TOKEN'] : '');
-        $service_id = array_key_exists('service_id', $_POST) ? $_POST['service_id'] : (array_key_exists('PAYNL_SERVICE_ID', $conf) ? $conf['PAYNL_SERVICE_ID'] : '');
+        $paynltoken = array_key_exists('paynltoken', Tools::getValue) ? Tools::getValue('paynltoken') : (array_key_exists('PAYNL_TOKEN', $conf) ? $conf['PAYNL_TOKEN'] : '');
+        $service_id = array_key_exists('service_id', Tools::getValue) ? Tools::getValue('service_id') : (array_key_exists('PAYNL_SERVICE_ID', $conf) ? $conf['PAYNL_SERVICE_ID'] : '');
 
-        $wait = array_key_exists('wait', $_POST) ? $_POST['wait'] : (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
-        $success = array_key_exists('success', $_POST) ? $_POST['success'] : (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
-        $amountnotvalid = array_key_exists('amountnotvalid', $_POST) ? $_POST['amountnotvalid'] : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
-        $cancel = array_key_exists('cancel', $_POST) ? $_POST['cancel'] : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
+        $wait = array_key_exists('wait', Tools::getValue) ? Tools::getValue('wait') : (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
+        $success = array_key_exists('success', Tools::getValue) ? Tools::getValue('success') : (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
+        $amountnotvalid = array_key_exists('amountnotvalid', Tools::getValue) ? Tools::getValue('amountnotvalid') : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
+        $cancel = array_key_exists('cancel', Tools::getValue) ? Tools::getValue('cancel') : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
 
         // Get states
         $states = OrderState::getOrderStates(intval($this->context->cookie->id_lang));
