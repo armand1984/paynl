@@ -20,7 +20,7 @@
         <div class="col-xs-12 col-md-6">
             <p class="payment_module" >
                 <a data-ajax="false" class="paynl_paymentmethod " href="{$link->getModuleLink('paynl_paymentmethods', 'payment', [pid => {$v.id}], true)|escape:'html'}" title="{l s=$v.name mod='paynl_paymentmethods'}">
-                    <label class='pp_s75 pp{$v.id}'></label>
+                    <label class='pp_s75 pp{$v.id|escape:"intval"}'></label>
                     {*<img src="https://admin.pay.nl/images/payment_profiles/{$v.id}.gif" alt="{$v.name}" width="86" height="49" />*}
                     {$v.name}{if $v.extraCosts != 0}  <span class="">+ &euro; {number_format($v.extraCosts,2,',', '.')}</span> {/if}
                 </a>
