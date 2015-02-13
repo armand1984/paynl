@@ -287,7 +287,7 @@ class paynl_paymentmethods extends PaymentModule {
 
         if (Tools::getIsset(Tools::getValue('submitPaynl'))) {
             if (!Tools::getIsset(Tools::getValue('api')))
-                Tools::getValue('api') = 1;
+                Tools::setValue('api', 1);
 
             if (!sizeof($this->_postErrors)) {
                 Configuration::updateValue('PAYNL_TOKEN', Tools::getValue('paynltoken'));
