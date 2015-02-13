@@ -385,7 +385,7 @@ return $this->_html;
 
 public function displayConf()
 {
-$this->_html .='
+$this->_html .= '
 <div class="conf confirm">
   <img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />
   '.$this->l('Settings updated').'
@@ -395,20 +395,20 @@ $this->_html .='
 public function displayErrors()
 {
 $nbErrors = count($this->_postErrors);
-$this->_html .='
+$this->_html .= '
 <div class="alert error">
   <h3>'.($nbErrors > 1 ? $this->l('There are') : $this->l('There is')).' '.$nbErrors.' '.($nbErrors > 1 ? $this->l('errors') : $this->l('error')).'</h3>
   <ol>';
 foreach ($this->_postErrors as $error)
-$this->_html .='<li>'.$error.'</li>';
-$this->_html .='
+$this->_html .= '<li>'.$error.'</li>';
+$this->_html .= '
   </ol>
 </div>';
 }
 
 public function displayPaynl()
 {
-$this->_html .='
+$this->_html .= '
 <img src="../modules/paynl_paymentmethods/pay.nl.logo.gif" height="20%" width="20%" style="float:left; margin-right:15px;" />
 <b>'.$this->l('This module allows you to accept payments by Pay.nl.').'</b>
 <br /><br /><br />';
@@ -448,20 +448,20 @@ foreach ($states as $state)
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $wait) ? ' selected' : '';
-$osWait .='<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$osWait .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osWait .='</select>';
+$osWait .= '</select>';
 $osSuccess = '<select name="success">';
 foreach ($states as $state)
 {
 if ($state['logable'] == 1)
 {
 $selected = ($state['id_order_state'] == $success) ? ' selected' : '';
-$osSuccess .='<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$osSuccess .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osSuccess .='</select>';
+$osSuccess .= '</select>';
 
 $osCancel = '<select name="cancel">';
 foreach ($states as $state)
@@ -469,10 +469,10 @@ foreach ($states as $state)
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $cancel) ? ' selected' : '';
-$osCancel .='<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$osCancel .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osCancel .='</select>';
+$osCancel .= '</select>';
 
 $countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)($this->id));
 foreach ($countries as $country)
@@ -559,13 +559,13 @@ $validateOnStart = array();
 
 
 $exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>';
-$exceptions .='<table border="1"><tr><th>'.$this->l('Country').'</th><th colspan="' . count($profiles).'">'.$this->l('Payment methods').'</th></tr>';
-$exceptions .='<tr><td>&nbsp;</td>';
+$exceptions .= '<table border="1"><tr><th>'.$this->l('Country').'</th><th colspan="' . count($profiles).'">'.$this->l('Payment methods').'</th></tr>';
+$exceptions .= '<tr><td>&nbsp;</td>';
 foreach ($profiles as $profile)
 
-$exceptions.='<td>'.$profile['name'].'</td>';
+$exceptions.= '<td>'.$profile['name'].'</td>';
 
-$exceptions.='</tr>';
+$exceptions.= '</tr>';
 
 foreach ($countries as $countryid => $country)
 {
@@ -575,41 +575,41 @@ continue;
 
 
 
-$exceptions .='<tr><td>' .$country["name"].'</td>';
+$exceptions .= '<tr><td>' .$country["name"].'</td>';
 
 foreach ($profiles as $profile)
 {
-$exceptions .='<td>';
+$exceptions .= '<td>';
 
 if (!$forceProfilesEnable)
 {
 
-$exceptions .='<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'.(Tools::getIsset($profilesEnable[$countryid][$profile['id']]) ? ' checked="checked"' : '').' />';
+$exceptions .= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'.(Tools::getIsset($profilesEnable[$countryid][$profile['id']]) ? ' checked="checked"' : '').' />';
 }
 else
 
-$exceptions .='<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'" checked="checked" />';
+$exceptions .= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'" checked="checked" />';
 
 
-$exceptions .='</td>';
+$exceptions .= '</td>';
 }
-$exceptions .='</tr>';
+$exceptions .= '</tr>';
 }
-$exceptions .='</table>';
+$exceptions .= '</table>';
 
-$exceptions.='<br /><h2 class="space">'.$this->l('Payment priority').'</h2>';
-$exceptions.='<p>'.$this->l('Lower priority is more important').'</p>';
-$exceptions .='<table border="1"><tr><th>'.$this->l('Payment method').'</th><th>'.$this->l('Order').'</th>';
-$exceptions.='<th>'.$this->l('Extra costs fixed').'</th>';
-$exceptions.='<th>'.$this->l('Extra costs percentage').'</th>';
-$exceptions.='<th>'.$this->l('Extra costs max').'</th>';
-$exceptions.='<th>'.$this->l('Validate on transaction start').'</th>';
-$exceptions .='</tr>';
+$exceptions.= '<br /><h2 class="space">'.$this->l('Payment priority').'</h2>';
+$exceptions.= '<p>'.$this->l('Lower priority is more important').'</p>';
+$exceptions .= '<table border="1"><tr><th>'.$this->l('Payment method').'</th><th>'.$this->l('Order').'</th>';
+$exceptions.= '<th>'.$this->l('Extra costs fixed').'</th>';
+$exceptions.= '<th>'.$this->l('Extra costs percentage').'</th>';
+$exceptions.= '<th>'.$this->l('Extra costs max').'</th>';
+$exceptions.= '<th>'.$this->l('Validate on transaction start').'</th>';
+$exceptions .= '</tr>';
 foreach ($profiles as $profile)
 {
-$exceptions .='<tr><td>'.$profile['name'].'</td><td>';
+$exceptions .= '<tr><td>'.$profile['name'].'</td><td>';
 
-$exceptions .='<select name="enaO['.$profile['id'].']">';
+$exceptions .= '<select name="enaO['.$profile['id'].']">';
 $value = '';
 if (Tools::getIsset($profilesOrder[$profile['id']]))
 
@@ -625,18 +625,18 @@ if ($value == $i)
 $selected = 'selected="selected"';
 
 
-$exceptions.='<option value="'.$i.'" '.$selected.'>'.$this->l('Priority').' '.($i + 1).'</option>';
+$exceptions.= '<option value="'.$i.'" '.$selected.'>'.$this->l('Priority').' '.($i + 1).'</option>';
 }
-$exceptions .='</select>';
-$exceptions .='</td>';
+$exceptions .= '</select>';
+$exceptions .= '</td>';
 
 $fixed = @$extraCosts[$profile['id']]['fixed'];
 $percentage = @$extraCosts[$profile['id']]['percentage'];
 $max = @$extraCosts[$profile['id']]['max'];
 
-$exceptions .='<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
-$exceptions .='<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';
-$exceptions .='<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max . '" /></td>';
+$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
+$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';
+$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max . '" /></td>';
 
 $validateOnStartChecked = '';
 if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profile['id']] == 1)
@@ -644,11 +644,11 @@ if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profi
 $validateOnStartChecked = "checked='checked'";
 
 
-$exceptions .='<td><input type="hidden" name="validateOnStart['.$profile['id'].']" value="0" /><input '.$validateOnStartChecked.' name="validateOnStart['.$profile['id'].']"  type="checkbox" value="1" /></td>';
+$exceptions .= '<td><input type="hidden" name="validateOnStart['.$profile['id'].']" value="0" /><input '.$validateOnStartChecked.' name="validateOnStart['.$profile['id'].']"  type="checkbox" value="1" /></td>';
 
-$exceptions .='</tr>';
+$exceptions .= '</tr>';
 }
-$exceptions.='</table>';
+$exceptions.= '</table>';
 } catch (Exception $ex) {
 $exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>' .
 '<br />'.$this->l('Payment restrictions available after connecting to Pay.nl');
@@ -656,7 +656,7 @@ $exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>
 
 
 
-$this->_html .='
+$this->_html .= '
 <form action="'.$_SERVER['REQUEST_URI'].'" method="post">
 <fieldset>
   <legend><img src="../img/admin/contact.gif" />'.$this->l('Settings').'</legend>
