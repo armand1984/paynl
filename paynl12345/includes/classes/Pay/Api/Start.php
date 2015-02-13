@@ -14,186 +14,211 @@
 
 class Pay_Api_Start extends Pay_Api {
 
-    protected $_version = 'v3';
-    protected $_controller = 'transaction';
-    protected $_action = 'start';
-    private $_amount;
-    private $_currency;
-    private $_paymentOptionId;
-    private $_paymentOptionSubId;
-    private $_finishUrl;
-  
-    private $_exchangeUrl;
-    private $_description;
-    private $_enduser;
-    private $_extra1;
-    private $_extra2;
-    private $_extra3;
-    
-    private $_promotorId;
-    private $_info;
-    private $_tool;
-    private $_object;
-    private $_domainId;
-    private $_transferData;
-    
-    private $_products = array();
+protected $_version = 'v3';
+protected $_controller = 'transaction';
+protected $_action = 'start';
+private $_amount;
+private $_currency;
+private $_paymentOptionId;
+private $_paymentOptionSubId;
+private $_finishUrl;
 
-    public function setCurrency($currency){
-        $this->_currency = Tools::strtoupper($currency);
-    }
-    public function setPromotorId($promotorId){
-        $this->_promotorId = $promotorId;
-    }
-    public function setInfo($info){
-        $this->_info = $info;
-    }
-    public function setTool($tool){
-        $this->_tool = $tool;
-    }
-    public function setObject($object){
-        $this->_object = $object;
-    }
- 
-    public function setTransferData($transferData){
-        $this->_transferData = $transferData;
-    }
-    /**
-     * Add a product to an order
-     * Attention! This is purely an adminstrative option, the amount of the order is not modified.
-     * 
-     * @param string $id
-     * @param string $description
-     * @param int $price
-     * @param int $quantity
-     * @param int $vatPercentage
-     * @throws Pay_Exception
-     */
-    public function addProduct($id, $description, $price, $quantity, $vatPercentage = 'H') {
-        if (!is_numeric($price)) {
-            throw new Pay_Exception('Price moet numeriek zijn', 1);
-        }
-        if (!is_numeric($quantity)) {
-            throw new Pay_Exception('Quantity moet numeriek zijn', 1);
-        }
+private $_exchangeUrl;
+private $_description;
+private $_enduser;
+private $_extra1;
+private $_extra2;
+private $_extra3;
 
-        $quantity = $quantity * 1;
+private $_promotorId;
+private $_info;
+private $_tool;
+private $_object;
+private $_domainId;
+private $_transferData;
 
-        //description mag maar 45 chars lang zijn
-        $description = Tools::substr($description, 0, 45);
+private $_products = array();
 
-        $arrProduct = array(
-            'productId' => $id,
-            'description' => $description,
-            'price' => $price,
-            'quantity' => $quantity,
-            'vatCode' => $vatPercentage,
-        );
-        $this->_products[] = $arrProduct;
-    }
+public function setCurrency($currency)
+{
+$this->_currency = Tools::strtoupper($currency);
+}
+public function setPromotorId($promotorId)
+{
+$this->_promotorId = $promotorId;
+}
+public function setInfo($info)
+{
+$this->_info = $info;
+}
+public function setTool($tool)
+{
+$this->_tool = $tool;
+}
+public function setObject($object)
+{
+$this->_object = $object;
+}
 
-    /**
-     * Set the enduser data in the following format
-     * 
-     * array(
-     *  initals
-     *  lastName
-     *  language
-     *  accessCode
-     *  gender (M or F)
-     *  dob (DD-MM-YYYY)
-     *  phoneNumber
-     *  emailAddress
-     *  bankAccount
-     *  iban
-     *  bic
-     *  sendConfirmMail
-     *  confirmMailTemplate
-     *  address => array(
-     *      streetName
-     *      streetNumber
-     *      zipCode
-     *      city
-     *      countryCode
-     *  )
-     *  invoiceAddress => array(
-     *      initials
-     *      lastname
-     *      streetName
-     *      streetNumber
-     *      zipCode
-     *      city
-     *      countryCode
-     *  )
-     * )
-     * @param array $enduser
-     */
-    public function setEnduser($enduser) {
-        $this->_enduser = $enduser;
-    }
+public function setTransferData($transferData)
+{
+$this->_transferData = $transferData;
+}
+/**
+* Add a product to an order
+* Attention! This is purely an adminstrative option, the amount of the order is not modified.
+*
+* @param string $id
+* @param string $description
+* @param int $price
+* @param int $quantity
+* @param int $vatPercentage
+* @throws Pay_Exception
+*/
+public function addProduct($id, $description, $price, $quantity, $vatPercentage = 'H')
+{
+if (!is_numeric($price))
 
-    /**
-     * Set the amount(in cents) of the transaction
-     * 
-     * @param int $amount
-     * @throws Pay_Exception
-     */
-    public function setAmount($amount) {
-        if (is_numeric($amount)) {
-            $this->_amount = $amount;
-        } else {
-            throw new Pay_Exception('Amount is niet numeriek', 1);
-        }
-    }
+throw new Pay_Exception('Price moet numeriek zijn', 1);
 
-    public function setPaymentOptionId($paymentOptionId) {
-        if (is_numeric($paymentOptionId)) {
-            $this->_paymentOptionId = $paymentOptionId;
-        } else {
-            throw new Pay_Exception('PaymentOptionId is niet numeriek', 1);
-        }
-    }
+if (!is_numeric($quantity))
+throw new Pay_Exception('Quantity moet numeriek zijn', 1);
 
-    public function setPaymentOptionSubId($paymentOptionSubId) {
-        if (is_numeric($paymentOptionSubId)) {
-            $this->_paymentOptionSubId = $paymentOptionSubId;
-        } else {
-            throw new Pay_Exception('PaymentOptionSubId is niet numeriek', 1);
-        }
-    }
 
-    /**
-     * Set the url where the user will be redirected to after payment.
-     * 
-     * @param string $finishUrl
-     */
-    public function setFinishUrl($finishUrl) {
-        $this->_finishUrl = $finishUrl;
-    }
+$quantity = $quantity * 1;
 
-    /**
-     * Set the comunication url, the pay.nl server will call this url when the status of the transaction changes
-     * 
-     * @param string $exchangeUrl
-     */
-    public function setExchangeUrl($exchangeUrl) {
-        $this->_exchangeUrl = $exchangeUrl;
-    }
+//description mag maar 45 chars lang zijn
+$description = Tools::substr($description, 0, 45);
 
-  
+$arrProduct = array(
+'productId' => $id,
+'description' => $description,
+'price' => $price,
+'quantity' => $quantity,
+'vatCode' => $vatPercentage,
+);
+$this->_products[] = $arrProduct;
+}
 
-    public function setExtra1($extra1) {
-        $this->_extra1 = $extra1;
-    }
-    public function setExtra2($extra2) {
-        $this->_extra2 = $extra2;
-    }
+/**
+* Set the enduser data in the following format
+*
+* array(
+*  initals
+*  lastName
+*  language
+*  accessCode
+*  gender (M or F)
+*  dob (DD-MM-YYYY)
+*  phoneNumber
+*  emailAddress
+*  bankAccount
+*  iban
+*  bic
+*  sendConfirmMail
+*  confirmMailTemplate
+*  address => array(
+*      streetName
+*      streetNumber
+*      zipCode
+*      city
+*      countryCode
+*  )
+*  invoiceAddress => array(
+*      initials
+*      lastname
+*      streetName
+*      streetNumber
+*      zipCode
+*      city
+*      countryCode
+*  )
+* )
+* @param array $enduser
+*/
+public function setEnduser($enduser)
+{
+$this->_enduser = $enduser;
+}
 
-    public function setExtra3($extra3) {
-        $this->_extra3 = $extra3;
-    }
-    public function setDomainId($domainId) {
-        $this->_domainId = $domainId;
+/**
+* Set the amount(in cents) of the transaction
+*
+* @param int $amount
+* @throws Pay_Exception
+*/
+public function setAmount($amount)
+{
+if (is_numeric($amount))
+
+$this->_amount = $amount;
+else
+
+throw new Pay_Exception('Amount is niet numeriek', 1);
+
+}
+
+public function setPaymentOptionId($paymentOptionId)
+{
+if (is_numeric($paymentOptionId))
+
+$this->_paymentOptionId = $paymentOptionId;
+
+else
+
+throw new Pay_Exception('PaymentOptionId is niet numeriek', 1);
+
+}
+
+public function setPaymentOptionSubId($paymentOptionSubId)
+{
+if (is_numeric($paymentOptionSubId))
+
+$this->_paymentOptionSubId = $paymentOptionSubId;
+
+else
+throw new Pay_Exception('PaymentOptionSubId is niet numeriek', 1);
+
+}
+
+/**
+* Set the url where the user will be redirected to after payment.
+*
+* @param string $finishUrl
+*/
+public function setFinishUrl($finishUrl)
+{
+$this->_finishUrl = $finishUrl;
+}
+
+/**
+* Set the comunication url, the pay.nl server will call this url when the status of the transaction changes
+*
+* @param string $exchangeUrl
+*/
+public function setExchangeUrl($exchangeUrl)
+{
+$this->_exchangeUrl = $exchangeUrl;
+}
+
+
+
+public function setExtra1($extra1)
+{
+$this->_extra1 = $extra1;
+}
+public function setExtra2($extra2)
+{
+$this->_extra2 = $extra2;
+}
+
+public function setExtra3($extra3)
+{
+$this->_extra3 = $extra3;
+}
+public function setDomainId($domainId)
+{
+$this->_domainId = $domainId;
     }
 
     /**
