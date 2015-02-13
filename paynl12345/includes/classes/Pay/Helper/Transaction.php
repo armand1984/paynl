@@ -78,7 +78,7 @@ public static function processTransaction($transactionId)
 $token = Configuration::get('PAYNL_TOKEN');
 $serviceId = Configuration::get('PAYNL_SERVICE_ID');
 
-$apiInfo = new Pay_Api_Info();
+$apiInfo = new PayApiInfo();
 
 $apiInfo->setApiToken($token);
 $apiInfo->setServiceId($serviceId);
