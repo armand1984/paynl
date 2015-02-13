@@ -75,7 +75,6 @@ return true;
 
 public static function processTransaction($transactionId)
 {
-
 $token = Configuration::get('PAYNL_TOKEN');
 $serviceId = Configuration::get('PAYNL_SERVICE_ID');
 
@@ -98,7 +97,7 @@ $transaction = self::getTransaction($transactionId);
 } catch (Pay_Exception $ex) {
 // transactie is niet gevonden... quickfix, we voegen hem opnieuw toe
 self::addTransaction($transactionId, $result['paymentDetails']['paymentOptionId'], $result['paymentDetails']['amount'], $result['paymentDetails']['paidCurrency'], str_replace('CartId: ', '', $result['statsDetails']['extra1']), 'Inserted after not found');
- 
+
 $transaction = self::getTransaction($transactionId);
 }
 
@@ -160,7 +159,7 @@ $paymentMethodName = $module->getPaymentMethodName($transaction['option_id']);
 
 
 
-$module->validateOrderPay((int) $cart->id, $id_order_state, $transactionAmount / 100, $extraFee, $paymentMethodName, NULL, array('transaction_id' => $transactionId), (int) $currency, false, $customer->secure_key);
+$module->validateOrderPay((int)$cart->id, $id_order_state, $transactionAmount / 100, $extraFee, $paymentMethodName, NULL, array('transaction_id' => $transactionId), (int)$currency, false, $customer->secure_key);
 
 $real_order_id = Order::getOrderByCartId($cart->id);
 }
@@ -172,8 +171,8 @@ if ($real_order_id)
 {
 $objOrder = new Order($real_order_id);
 $history = new OrderHistory();
-$history->id_order = (int) $objOrder->id;
-$history->changeIdOrderState((int) $statusCancel, $objOrder);
+$history->id_order = (int)$objOrder->id;
+$history->changeIdOrderState((int)$statusCancel, $objOrder);
 $history->addWithemail();
 }
 }
@@ -191,19 +190,22 @@ return array(
  * @param int $statusId
  * @return string The status
  */
-public static function getStateText($stateId) {
-switch ($stateId) {
+public static function getStateText($stateId)
+{
+switch ($stateId)
+{
 case 80:
 case -51:
 return 'CHECKAMOUNT';
 case 100:
 return 'PAID';
 default:
-if ($stateId < 0) {
+if ($stateId < 0)
+
 return 'CANCEL';
-} else {
+else
 return 'PENDING';
-}
+
 }
 }
 
