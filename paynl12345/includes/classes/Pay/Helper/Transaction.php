@@ -1,15 +1,15 @@
 <?php
 /**
- * LANDING PAGES
+ * PAYNL PAYMENT METHODS
  *
  * PHP version 5
  *
  * @category  Prestashop module
- * @package   landingpages
- * @authorBrandweb <office@brandweb.ro>
- * @copyright 2015 Brandweb
+ * @package   paynl_paymentmethods
+ * @authorNovisites <info@novisites.nl>
+ * @copyright 2015 Novisites
  * @license   GNU General Public License version 2
- * @version   1.0
+ * @version   3.2.2
  */
 
 class PayHelperTransaction {
