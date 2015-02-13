@@ -51,40 +51,37 @@ if (!$arr_return['request']['result'])
 
 return $arr_return;
 
-
 $arr_return['paymentOptions'] = array();
 
-$countryOptionList = $arr_return['countryOptionList'];
+$country_option_list = $arr_return['countryOptionList'];
 unset($arr_return['countryOptionList']);
-if (isset($countryOptionList) && is_array($countryOptionList))
+if (isset($country_option_list) && is_array($country_option_list))
 {
-foreach ($countryOptionList as $strCountrCode => $arrCountry)
+foreach ($country_option_list as $str_countr_code => $arr_country)
 {
-foreach ($arrCountry['paymentOptionList'] as $arrPaymentProfile)
+foreach ($arr_country['paymentOptionList'] as $arr_payment_profile)
 {
 
-if (!isset($arr_return['paymentOptions'][$arrPaymentProfile['id']]))
+if (!isset($arr_return['paymentOptions'][$arr_payment_profile['id']]))
 {
-$arr_return['paymentOptions'][$arrPaymentProfile['id']] = array(
-'id' => $arrPaymentProfile['id'],
-'name' => $arrPaymentProfile['name'],
-'visibleName' => $arrPaymentProfile['name'],
-'img' => $arrPaymentProfile['img'],
-'path' => $arrPaymentProfile['path'],
+$arr_return['paymentOptions'][$arr_payment_profile['id']] = array(
+'id' => $arr_payment_profile['id'],
+'name' => $arr_payment_profile['name'],
+'visibleName' => $arr_payment_profile['name'],
+'img' => $arr_payment_profile['img'],
+'path' => $arr_payment_profile['path'],
 'paymentOptionSubList' => array(),
 'countries' => array(),
 );
 }
 
-if (!empty($arrPaymentProfile['paymentOptionSubList']))
+if (!empty($arr_payment_profile['paymentOptionSubList']))
 
-$arr_return['paymentOptions'][$arrPaymentProfile['id']]['paymentOptionSubList'] = $arrPaymentProfile['paymentOptionSubList'];
+$arr_return['paymentOptions'][$arr_payment_profile['id']]['paymentOptionSubList'] = $arr_payment_profile['paymentOptionSubList'];
 
-
-
-$arr_return['paymentOptions'][$arrPaymentProfile['id']]['countries'][$strCountrCode] = array(
-'id' => $strCountrCode,
-'name' => $arrCountry['visibleName'],
+$arr_return['paymentOptions'][$arr_payment_profile['id']]['countries'][$str_countr_code] = array(
+'id' => $str_countr_code,
+'name' => $arr_country['visibleName'],
 );
 }
 }

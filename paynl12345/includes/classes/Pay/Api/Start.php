@@ -235,9 +235,9 @@ $this->_description = $description;
  * @return array
  * @throws PayException
  */
-protected function _getPostData()
+protected function GetPostData()
 {
-$data = parent::_getPostData();
+$data = parent::GetPostData();
 
 if ($this->api_token == '')
 

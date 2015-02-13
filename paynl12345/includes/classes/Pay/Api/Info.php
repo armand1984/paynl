@@ -23,7 +23,7 @@ protected $_version = 'v3';
 *
 * @var string The controller of the api
 */
-protected $_controller = 'transaction';
+protected $controller = 'transaction';
 /**
 *
 * @var string The action
@@ -33,11 +33,11 @@ protected $_action = 'info';
 /**
 * Set the transaction id for the request
 *
-* @param string $transactionId
+* @param string $transaction_id
 */
-public function setTransactionId($transactionId)
+public function setTransactionId($transaction_id)
 {
-$this->_postData['transactionId'] = $transactionId;
+$this->post_data['transactionId'] = $transaction_id;
 }
 /**
 * Check if all required fields are set, if all required fields are set, returns the fields
@@ -48,14 +48,14 @@ $this->_postData['transactionId'] = $transactionId;
 protected function _getPostData()
 {
 $data = parent::_getPostData();
-if ($this->_apiToken == '')
+if ($this->api_token == '')
 
 throw new PayException('apiToken not set', 1);
 else
 
-$data['token'] = $this->_apiToken;
+$data['token'] = $this->api_token;
 
-if (!isset($this->_postData['transactionId']))
+if (!isset($this->post_data['transactionId']))
 throw new PayException('transactionId is not set', 1);
 
 return $data;

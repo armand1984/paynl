@@ -20,9 +20,9 @@ class PayHelper {
 * @param int $statusId
 * @return string The status
 */
-public static function getStateText($stateId)
+public static function getStateText($state_id)
 {
-switch ($stateId)
+switch ($state_id)
 {
 case -70:
 case -71:
@@ -47,7 +47,7 @@ return 'PARTIAL PAYMENT';
 case 100:
 return 'PAID';
 default:
-if ($stateId < 0)
+if ($state_id < 0)
 
 return 'CANCEL';
 else
@@ -60,7 +60,7 @@ return 'UNKNOWN';
 /*remove all empty nodes in an array*/
 public static function filterArrayRecursive($array)
 {
-$newArray = array();
+$new_array = array();
 foreach ($array as $key => $value)
 {
 if (is_array($value))
@@ -69,10 +69,10 @@ $value = self::filterArrayRecursive($value);
 
 if (!empty($value))
 
-$newArray[$key] = $value;
+$new_array[$key] = $value;
 
 }
-return $newArray;
+return $new_array;
 }
 
 /**
@@ -82,15 +82,16 @@ return $newArray;
 */
 public static function isSecure()
 {
-$isSecure = false;
+$is_secure = false;
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
 
-$isSecure = true;
-elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')
+$is_secure = true;
+elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'
+|| !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')
 
-$isSecure = true;
+$is_secure = true;
 
-return $isSecure;
+return $is_secure;
 }
 /**
 * Get the uri of the current script without the filename.
