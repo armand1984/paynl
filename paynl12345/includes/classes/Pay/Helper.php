@@ -113,54 +113,53 @@ $uri .= $_SERVER['SERVER_NAME'];
 if (!empty($_SERVER['REQUEST_URI']))
 {
 $uri .= $_SERVER['REQUEST_URI'];
-$uriDir = $uri;
+$uri_dir = $uri;
 if (Tools::substr($uri, -4) == '.php')
 
-$uriDir = dirname($uri);
+$uri_dir = dirname($uri);
 
 
+if ($uri_dir != 'http:' && $uri_dir != 'https:')
 
-if ($uriDir != 'http:' && $uriDir != 'https:')
-
-$uri = $uriDir;
+$uri = $uri_dir;
 
 }
 
 return $uri.'/';
 }
-public static function splitAddress($strAddress)
+public static function splitAddress($str_address)
 {
-$strAddress = trim($strAddress);
+$str_address = trim($str_address);
 
-$a = preg_split('/([0-9]+)/', $strAddress, 2, PREG_SPLIT_DELIM_CAPTURE);
-$strStreetName = trim(array_shift($a));
-$strStreetNumber = trim(implode('', $a));
+$a = preg_split('/([0-9]+)/', $str_address, 2, PREG_SPLIT_DELIM_CAPTURE);
+$str_street_name = trim(array_shift($a));
+$$str_street_number = trim(implode('', $a));
 
-if (empty($strStreetName))
+if (empty($str_street_name))
 {
 // American address notation
-$a = preg_split('/([a-zA-Z]{2,})/', $strAddress, 2, PREG_SPLIT_DELIM_CAPTURE);
+$a = preg_split('/([a-zA-Z]{2,})/', $str_address, 2, PREG_SPLIT_DELIM_CAPTURE);
 
-$strStreetNumber = trim(array_shift($a));
-$strStreetName = implode(' ', $a);
+$$str_street_number = trim(array_shift($a));
+$str_street_name = implode(' ', $a);
 }
 
-return array($strStreetName, $strStreetNumber);
+return array($str_street_name, $$str_street_number);
 }
 
 /**
-* Sort the paymentoptions by name
+* Sort the $payment_options by name
 *
-* @param array $paymentOptions
+* @param array $$payment_options
 * @return array
 */
-public static function sortPaymentOptions($paymentOptions)
+public static function sort$payment_options($$payment_options)
 {
-uasort($paymentOptions, 'sortPaymentOptions');
-return $paymentOptions;
+uasort($$payment_options, 'sort$payment_options');
+return $$payment_options;
 }
 }
-function sortPaymentOptions($a, $b)
+function sort$payment_options($a, $b)
 {
 return strcmp($a['name'], $b['name']);
 }

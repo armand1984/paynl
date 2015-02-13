@@ -18,7 +18,7 @@ class PayApiInfo extends PayApi {
 *
 * @var string The version of the api
 */
-protected $_version = 'v3';
+protected $version = 'v3';
 /**
 *
 * @var string The controller of the api

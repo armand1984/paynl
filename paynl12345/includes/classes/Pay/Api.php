@@ -21,28 +21,28 @@ const REQUEST_TYPE_GET = 0;
 *
 * @var string the url to the pay.nl api
 */
-protected $_apiUrl = 'http://rest-api.pay.nl';
+protected $apiUrl = 'http://rest-api.pay.nl';
 /**
 *
 * @var string The version af the api to use
 */
-protected $_version = 'v3';
+protected $version = 'v3';
 /**
 *
 * @var string The controller of the api to use, generally this is set by the child class
 */
-protected $_controller = '';
+protected $controller = '';
 /**
 *
 * @var string The action of the api to use, generally this is set by the child class
 */
-protected $_action = '';
+protected $action = '';
 
 /**
 *
 * @var string The serviceid
 */
-protected $_serviceId = '';
+protected $service_id = '';
 /**
 *
 * @var string the API token
