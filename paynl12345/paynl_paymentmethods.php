@@ -169,8 +169,8 @@ return false;
 
 public function getExtraCosts($paymentMethodId, $totalAmount)
 {
-        $arrExtraCosts = Configuration::get('PAYNL_PAYMENT_EXTRA_COSTS');
-        $arrExtraCosts = unserialize($arrExtraCosts);
+$arrExtraCosts = Configuration::get('PAYNL_PAYMENT_EXTRA_COSTS');
+$arrExtraCosts = unserialize($arrExtraCosts);
 
         $arrExtraCosts = $arrExtraCosts[$paymentMethodId];
         if (empty($arrExtraCosts)) {
