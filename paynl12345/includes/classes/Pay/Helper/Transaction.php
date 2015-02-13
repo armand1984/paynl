@@ -12,7 +12,7 @@
  * @version   1.0
  */
 
-class Pay_Helper_Transaction {
+class PayHelperTransaction {
 
 public static function addTransaction($transaction_id, $option_id, $amount, $currency, $order_id, $startData)
 {

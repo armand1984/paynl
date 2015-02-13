@@ -12,7 +12,7 @@
  * @version   1.0
  */
 
-class Pay_Api_Start extends Pay_Api {
+class PayApiStart extends PayApi {
 
 protected $_version = 'v3';
 protected $_controller = 'transaction';

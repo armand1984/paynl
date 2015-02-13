@@ -12,7 +12,7 @@
  * @version   1.0
  */
 
-class paynl_paymentmethodsPaymentModuleFrontController extends ModuleFrontController {
+class PaynlPaymentmethodsPaymentModuleFrontController extends ModuleFrontController {
 
 public $ssl = true;
 public $display_column_left = false;

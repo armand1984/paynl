@@ -12,7 +12,7 @@
  * @version   1.0
  */
 
-class Pay_Api_Info extends Pay_Api {
+class PayApiInfo extends PayApi {
 
 /**
 *

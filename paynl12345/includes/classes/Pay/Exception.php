@@ -12,7 +12,7 @@
  * @version   1.0
  */
 
-class Pay_Exception extends Exception
+class PayException extends Exception
 {
 
 }

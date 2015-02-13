@@ -12,7 +12,7 @@
  * @version   1.0
  */
 
-class Pay_Helper {
+class PayHelper {
 
 /**
 * Get the status by statusId

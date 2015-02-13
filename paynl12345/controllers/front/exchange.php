@@ -12,7 +12,7 @@
  * @version   1.0
  */
 
-class paynl_paymentmethodsExchangeModuleFrontController extends ModuleFrontController
+class PaynlPaymentmethodsExchangeModuleFrontController extends ModuleFrontController
 {
 	public function initContent()
 	{

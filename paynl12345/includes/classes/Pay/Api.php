@@ -12,7 +12,7 @@
  * @version1.0
  */
 
-class Pay_Api {
+class PayApi {
 
 const REQUEST_TYPE_POST = 1;
 const REQUEST_TYPE_GET = 0;

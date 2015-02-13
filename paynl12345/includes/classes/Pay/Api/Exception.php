@@ -12,6 +12,6 @@
  * @version   1.0
  */
 
-class Pay_Api_Exception extends Pay_Exception{
+class PayApiException extends PayException{
 
 }

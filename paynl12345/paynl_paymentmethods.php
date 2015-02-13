@@ -17,7 +17,7 @@ exit;
 
 require_once _PS_MODULE_DIR_.'paynl_paymentmethods/includes/classes/Autoload.php';
 
-class paynl_paymentmethods extends PaymentModule {
+class PaynlPaymentmethods extends PaymentModule {
 
 public function __construct()
 {
