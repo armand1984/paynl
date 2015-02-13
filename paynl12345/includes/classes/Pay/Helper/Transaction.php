@@ -14,7 +14,8 @@
 
 class Pay_Helper_Transaction {
 
-public static function addTransaction($transaction_id, $option_id, $amount, $currency, $order_id, $startData) {
+public static function addTransaction($transaction_id, $option_id, $amount, $currency, $order_id, $startData)
+{
 $db = Db::getInstance();
 
 $data = array(
@@ -29,21 +30,24 @@ $data = array(
 $db->insert('pay_transactions', $data);
 }
 
-private static function updateTransactionState($transactionId, $statusText) {
+private static function updateTransactionState($transactionId, $statusText)
+{
 $db = Db::getInstance();
 
-$db->update('pay_transactions', array('status' => $statusText), "transaction_id = '".$db->escape($transactionId) . "'");
+$db->update('pay_transactions', array('status' => $statusText), "transaction_id = '".$db->escape($transactionId)."'");
 }
 
-public static function getTransaction($transaction_id) {
+public static function getTransaction($transaction_id)
+{
 $db = Db::getInstance();
 
-$sql = "SELECT * FROM "._DB_PREFIX_ . "pay_transactions WHERE transaction_id = '".$db->escape($transaction_id) . "'";
+$sql = 'SELECT * FROM "'._DB_PREFIX_.'pay_transactions WHERE transaction_id = "'.$db->escape($transaction_id).'""';
 
 $row = $db->getRow($sql);
-if (empty($row)) {
+if (empty($row))
+
 throw new Pay_Exception('Transaction not found');
-}
+
 return $row;
 }
 
@@ -53,20 +57,24 @@ return $row;
  * 
  * @param integer $order_id
  */
-public static function orderPaid($order_id) {
+public static function orderPaid($order_id)
+{
 $db = Db::getInstance();
 
-$sql = "SELECT * FROM "._DB_PREFIX_ . "pay_transactions WHERE order_id = '".$db->escape($order_id) . "' AND status = 'PAID'";
+$sql = 'SELECT * FROM "._DB_PREFIX_."pay_transactions WHERE order_id = "'.$db->escape($order_id).'" AND status = "PAID"';
 
 $row = $db->getRow($sql);
-if (empty($row)) {
+if (empty($row))
+
 return false;
-} else {
+else
+
 return true;
-}
+
 }
 
-public static function processTransaction($transactionId) {
+public static function processTransaction($transactionId)
+{
 
 $token = Configuration::get('PAYNL_TOKEN');
 $serviceId = Configuration::get('PAYNL_SERVICE_ID');
@@ -89,7 +97,7 @@ try{
 $transaction = self::getTransaction($transactionId);
 } catch (Pay_Exception $ex) {
 // transactie is niet gevonden... quickfix, we voegen hem opnieuw toe
-self::addTransaction($transactionId, $result['paymentDetails']['paymentOptionId'], $result['paymentDetails']['amount'],  $result['paymentDetails']['paidCurrency'], str_replace('CartId: ', '', $result['statsDetails']['extra1']), 'Inserted after not found');
+self::addTransaction($transactionId, $result['paymentDetails']['paymentOptionId'], $result['paymentDetails']['amount'], $result['paymentDetails']['paidCurrency'], str_replace('CartId: ', '', $result['statsDetails']['extra1']), 'Inserted after not found');
  
 $transaction = self::getTransaction($transactionId);
 }
@@ -98,11 +106,13 @@ $cartId = $orderId = $transaction['order_id'];
 
 $orderPaid = self::orderPaid($orderId);
 
-if ($orderPaid == true && $stateText != 'PAID') {
-throw new Pay_Exception('Order already paid');
-}
+if ($orderPaid == true && $stateText != 'PAID')
 
-if ($stateText == $transaction['status']) {
+throw new Pay_Exception('Order already paid');
+
+
+if ($stateText == $transaction['status'])
+{
 //nothing changed so return without changing anything
 $real_order_id = Order::getOrderByCartId($orderId);
 return array(
@@ -127,7 +137,8 @@ $id_order_state = '';
 
 //$paid = false;
 
-if ($stateText == 'PAID') {
+if ($stateText == 'PAID')
+{
 $id_order_state = $statusPaid;
 
 $module = Module::getInstanceByName(Tools::getValue('module'));
@@ -152,10 +163,13 @@ $paymentMethodName = $module->getPaymentMethodName($transaction['option_id']);
 $module->validateOrderPay((int) $cart->id, $id_order_state, $transactionAmount / 100, $extraFee, $paymentMethodName, NULL, array('transaction_id' => $transactionId), (int) $currency, false, $customer->secure_key);
 
 $real_order_id = Order::getOrderByCartId($cart->id);
-} elseif ($stateText == 'CANCEL') {
+}
+elseif ($stateText == 'CANCEL')
+{
 $real_order_id = Order::getOrderByCartId($cartId);
 
-if ($real_order_id) {
+if ($real_order_id)
+{
 $objOrder = new Order($real_order_id);
 $history = new OrderHistory();
 $history->id_order = (int) $objOrder->id;
