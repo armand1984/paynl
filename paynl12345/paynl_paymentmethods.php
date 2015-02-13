@@ -13,112 +13,127 @@
  */
 
 if (!defined('_PS_VERSION_'))
-    exit;
+exit;
 
-require_once _PS_MODULE_DIR_ . 'paynl_paymentmethods/includes/classes/Autoload.php';
+require_once _PS_MODULE_DIR_.'paynl_paymentmethods/includes/classes/Autoload.php';
 
 class paynl_paymentmethods extends PaymentModule {
 
-    public function __construct() {
-        $this->name = 'paynl_paymentmethods';
-        $this->tab = 'payments_gateways';
-        $this->version = '3.2.2';
-        $this->_postErrors = array();
-        $this->author = 'Novisites';
-        $this->currencies = true;
-        $this->currencies_mode = 'radio';
+public function __construct()
+{
+$this->name = 'paynl_paymentmethods';
+$this->tab = 'payments_gateways';
+$this->version = '3.2.2';
+$this->_postErrors = array();
+$this->author = 'Novisites';
+$this->currencies = true;
+$this->currencies_mode = 'radio';
 
-        parent::__construct();
+parent::__construct();
 
-        $this->page = basename(__FILE__, '.php');
-        $this->displayName = $this->l('Pay.nl Payment methods');
-        $this->description = $this->l('Accept payments by Pay.nl');
-        $this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
-        
-        if (_PS_VERSION_ < '1.5')
-        	require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
-    }
+$this->page = basename(__FILE__, '.php');
+$this->displayName = $this->l('Pay.nl Payment methods');
+$this->description = $this->l('Accept payments by Pay.nl');
+$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
 
-    public function validateOrderPay($id_cart, $id_order_state, $amount_paid, $extraCosts, $payment_method = 'Unknown', $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null) {
-        $statusPending = Configuration::get('PAYNL_WAIT');
-        $statusPaid = Configuration::get('PAYNL_SUCCESS');
+if (_PS_VERSION_ < '1.5')
+require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+}
 
-        // Als er nog geen order van dit cartid is, de order valideren.
-        $orderId = Order::getOrderByCartId($id_cart);
-        if ($orderId == false) {
-            if ($id_order_state == $statusPaid) {
-                if ($extraCosts != 0) {
-                    $id_order_state_tmp = $statusPending;
-                } else {
-                    $id_order_state_tmp = $statusPaid;
-                    
-                }
-            } else {
-                $id_order_state_tmp = $id_order_state;
-            }
-            $result = parent::validateOrder($id_cart, $id_order_state_tmp, $amount_paid, $this->displayName, $message, $extra_vars, $currency_special, $dont_touch_amount, $secure_key, $shop);
-            $orderId = $this->currentOrder;
-            
-            if($extraCosts == 0 && $id_order_state_tmp == $statusPaid){
-                //Als er geen extra kosten zijn, en de order staat op betaald zijn we klaar
-                return $result;
-            }
-        }
+public function validateOrderPay($id_cart, $id_order_state, $amount_paid, $extraCosts, $payment_method = 'Unknown', $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
+{
+$statusPending = Configuration::get('PAYNL_WAIT');
+$statusPaid = Configuration::get('PAYNL_SUCCESS');
 
-        if ($orderId && $id_order_state == $statusPaid) {
-            $order = new Order($orderId);
-            $shippingCost = $order->total_shipping;
+// Als er nog geen order van dit cartid is, de order valideren.
+$orderId = Order::getOrderByCartId($id_cart);
+if ($orderId == false)
+{
+if ($id_order_state == $statusPaid)
+{
+if ($extraCosts != 0)
 
-            $newShippingCosts = $shippingCost + $extraCosts;
-            $extraCostsExcl = round($extraCosts / (1 + (21 / 100)), 2);
+$id_order_state_tmp = $statusPending;
+else
+{
+$id_order_state_tmp = $statusPaid;
 
-            if ($extraCosts != 0) {
-                //als de order extra kosten heeft, moeten deze worden toegevoegd. 
-                $order->total_shipping = $newShippingCosts;
-                $order->total_shipping_tax_excl = $order->total_shipping_tax_excl + $extraCostsExcl;
-                $order->total_shipping_tax_incl = $newShippingCosts;
+}
+}
+else
 
-                $order->total_paid_tax_excl = $order->total_paid_tax_excl + $extraCostsExcl;
+$id_order_state_tmp = $id_order_state;
 
-                $order->total_paid_tax_incl = $order->total_paid_real = $order->total_paid = $order->total_paid + $extraCosts;
-            }
+$result = parent::validateOrder($id_cart, $id_order_state_tmp, $amount_paid, $this->displayName, $message, $extra_vars, $currency_special, $dont_touch_amount, $secure_key, $shop);
+$orderId = $this->currentOrder;
 
-            $result = $order->addOrderPayment($amount_paid, $payment_method, $extra_vars['transaction_id']);
+if ($extraCosts == 0 && $id_order_state_tmp == $statusPaid)
+{
+//Als er geen extra kosten zijn, en de order staat op betaald zijn we klaar
+return $result;
+}
+}
 
-            if (number_format($order->total_paid_tax_incl, 2) !== number_format($amount_paid, 2)) {
-                $id_order_state = Configuration::get('PS_OS_ERROR');
-            }
-            //paymentid ophalen
-            $orderPayment = OrderPayment::getByOrderId($order->id);
+if ($orderId && $id_order_state == $statusPaid)
+{
+$order = new Order($orderId);
+$shippingCost = $order->total_shipping;
 
-            $history = new OrderHistory();
-            $history->id_order = (int) $order->id;
-            $history->changeIdOrderState((int) $id_order_state, $order, $orderPayment);
-            $res = Db::getInstance()->getRow('
+$newShippingCosts = $shippingCost + $extraCosts;
+$extraCostsExcl = round($extraCosts / (1 + (21 / 100)), 2);
+
+if ($extraCosts != 0)
+{
+//als de order extra kosten heeft, moeten deze worden toegevoegd.
+$order->total_shipping = $newShippingCosts;
+$order->total_shipping_tax_excl = $order->total_shipping_tax_excl + $extraCostsExcl;
+$order->total_shipping_tax_incl = $newShippingCosts;
+
+$order->total_paid_tax_excl = $order->total_paid_tax_excl + $extraCostsExcl;
+
+$order->total_paid_tax_incl = $order->total_paid_real = $order->total_paid = $order->total_paid + $extraCosts;
+}
+
+$result = $order->addOrderPayment($amount_paid, $payment_method, $extra_vars['transaction_id']);
+
+if (number_format($order->total_paid_tax_incl, 2) !== number_format($amount_paid, 2))
+
+$id_order_state = Configuration::get('PS_OS_ERROR');
+
+//paymentid ophalen
+$orderPayment = OrderPayment::getByOrderId($order->id);
+
+$history = new OrderHistory();
+$history->id_order = (int)$order->id;
+$history->changeIdOrderState((int)$id_order_state, $order, $orderPayment);
+$res = Db::getInstance()->getRow('
 			SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
-			FROM `' . _DB_PREFIX_ . 'orders`
-			WHERE `id_order` = ' . (int) $order->id);
-            $order->invoice_date = $res['invoice_date'];
-            $order->invoice_number = $res['invoice_number'];
-            $order->delivery_date = $res['delivery_date'];
-            $order->delivery_number = $res['delivery_number'];
+FROM `'._DB_PREFIX_.'orders`
+WHERE `id_order` = '.(int)$order->id);
+$order->invoice_date = $res['invoice_date'];
+$order->invoice_number = $res['invoice_number'];
+$order->delivery_date = $res['delivery_date'];
+$order->delivery_number = $res['delivery_number'];
 
-            $order->update();
+$order->update();
 
-            $history->addWithemail();
-        }
-        return $result;
-    }
+$history->addWithemail();
+}
+return $result;
+}
 
-    public function install() {
-        if (!parent::install() || !$this->createTransactionTable() || !Configuration::updateValue('PAYNL_TOKEN', '') || !Configuration::updateValue('PAYNL_SERVICE_ID', '') || !Configuration::updateValue('PAYNL_ORDER_DESC', '') || !Configuration::updateValue('PAYNL_WAIT', '10') || !Configuration::updateValue('PAYNL_SUCCESS', '2') || !Configuration::updateValue('PAYNL_AMOUNTNOTVALID', '0') || !Configuration::updateValue('PAYNL_CANCEL', '6') || !Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', '') || !Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', '') || !$this->registerHook('paymentReturn') || !$this->registerHook('payment')) {
-            return false;
-        }
-        return true;
-    }
+public function install()
+{
+if (!parent::install() || !$this->createTransactionTable() || !Configuration::updateValue('PAYNL_TOKEN', '') || !Configuration::updateValue('PAYNL_SERVICE_ID', '') || !Configuration::updateValue('PAYNL_ORDER_DESC', '') || !Configuration::updateValue('PAYNL_WAIT', '10') || !Configuration::updateValue('PAYNL_SUCCESS', '2') || !Configuration::updateValue('PAYNL_AMOUNTNOTVALID', '0') || !Configuration::updateValue('PAYNL_CANCEL', '6') || !Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', '') || !Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', '') || !$this->registerHook('paymentReturn') || !$this->registerHook('payment'))
 
-    private function createTransactionTable() {
-        $sql = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "pay_transactions` (
+return false;
+
+return true;
+}
+
+private function createTransactionTable()
+{
+$sql = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."pay_transactions` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `transaction_id` varchar(50) NOT NULL,
         `option_id` int(11) NOT NULL,
@@ -132,23 +147,28 @@ class paynl_paymentmethods extends PaymentModule {
         PRIMARY KEY (`id`)
       ) ENGINE=myisam AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;";
 
-        DB::getInstance()->execute($sql);
-        return true;
-    }
+DB::getInstance()->execute($sql);
+return true;
+}
 
-    public function validateOnStart($paymentMethodId) {
-        $arrValidateOnStart = Configuration::get('PAYNL_VALIDATE_ON_START');
-        if (!empty($arrValidateOnStart)) {
-            $arrValidateOnStart = unserialize($arrValidateOnStart);
-            if (Tools::getIsset($arrValidateOnStart[$paymentMethodId]) && $arrValidateOnStart[$paymentMethodId] == 1) {
-                return true;
-            }
-        }
+public function validateOnStart($paymentMethodId)
+{
+$arrValidateOnStart = Configuration::get('PAYNL_VALIDATE_ON_START');
+if (!empty($arrValidateOnStart))
+{
+$arrValidateOnStart = unserialize($arrValidateOnStart);
+if (Tools::getIsset($arrValidateOnStart[$paymentMethodId]) && $arrValidateOnStart[$paymentMethodId] == 1)
+{
 
-        return false;
-    }
+return true;
+}
+}
 
-    public function getExtraCosts($paymentMethodId, $totalAmount) {
+return false;
+}
+
+public function getExtraCosts($paymentMethodId, $totalAmount)
+{
         $arrExtraCosts = Configuration::get('PAYNL_PAYMENT_EXTRA_COSTS');
         $arrExtraCosts = unserialize($arrExtraCosts);
 
