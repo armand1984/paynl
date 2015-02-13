@@ -172,17 +172,23 @@ if ($this->validateResult($arrResult)) return $this->_processResult($arrResult);
 * @return boolean Result valid
 * @throws Pay_Api_Exception
 */
-protected function validateResult($arrResult) {
-if ($arrResult['request']['result'] == 1) {
-  return true;
-} else {
-  if(isset($arrResult['request']['errorId']) && isset($arrResult['request']['errorMessage']) ){
- throw new Pay_Api_Exception($arrResult['request']['errorId'] . ' - ' . $arrResult['request']['errorMessage']);
-  } elseif(isset($arrResult['error'])){
- throw new Pay_Api_Exception($arrResult['error']);
-  } else {
- throw new Pay_Api_Exception('Unexpected api result');
-  }
+protected function validateResult($arrResult)
+{
+if ($arrResult['request']['result'] == 1)
+
+return true;
+else
+{
+if (isset($arrResult['request']['errorId']) && isset($arrResult['request']['errorMessage']))
+
+throw new Pay_Api_Exception($arrResult['request']['errorId'].' - '.$arrResult['request']['errorMessage']);
+
+elseif (isset($arrResult['error']))
+
+throw new Pay_Api_Exception($arrResult['error']);
+else
+throw new Pay_Api_Exception('Unexpected api result');
+
 }
 }
 }
