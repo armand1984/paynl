@@ -161,7 +161,7 @@ curl_close($ch);
 
 //$arrResult = Tools::json_decode($result, true);
 
-if ($this->validateResult($arrResult)) return $this->_processResult($arrResult);
+//if ($this->validateResult($arrResult)) return $this->_processResult($arrResult);
 }
 }
 
