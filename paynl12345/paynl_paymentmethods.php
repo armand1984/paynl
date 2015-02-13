@@ -301,9 +301,9 @@ $this->context->smarty->assign(array(
 return $this->display(_PS_MODULE_DIR_.'/'.$this->name.'/'.$this->name.'.php', 'views/templates/hook/payment.tpl');
 }
 else
-{
+
 return;
-}
+
 }
 
 public function hookPaymentReturn($params)
@@ -326,32 +326,32 @@ public function getContent()
 $this->_html = '<h2>'.$this->displayName.'</h2>';
 
 
-if (Tools::getIsset(Tools::getValue('submitPaynl')))
+if (Tools::getIsset(Tools::GETVALUE('submitPaynl')))
 {
-if (!Tools::getIsset(Tools::getValue('api')))
+if (!Tools::getIsset(Tools::GETVALUE('api')))
 Tools::setValue('api', 1);
 
 if (!sizeof($this->_postErrors))
 {
-Configuration::updateValue('PAYNL_TOKEN', Tools::getValue('paynltoken'));
-Configuration::updateValue('PAYNL_SERVICE_ID', Tools::getValue('service_id'));
-Configuration::updateValue('PAYNL_WAIT', Tools::getValue('wait'));
-Configuration::updateValue('PAYNL_SUCCESS', Tools::getValue('success'));
-Configuration::updateValue('PAYNL_CANCEL', Tools::getValue('cancel'));
-if (Tools::getIsset(Tools::getValue('enaC')))
+Configuration::updateValue('PAYNL_TOKEN', Tools::GETVALUE('paynltoken'));
+Configuration::updateValue('PAYNL_SERVICE_ID', Tools::GETVALUE('service_id'));
+Configuration::updateValue('PAYNL_WAIT', Tools::GETVALUE('wait'));
+Configuration::updateValue('PAYNL_SUCCESS', Tools::GETVALUE('success'));
+Configuration::updateValue('PAYNL_CANCEL', Tools::GETVALUE('cancel'));
+if (Tools::getIsset(Tools::GETVALUE('enaC')))
 
-Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', serialize(Tools::getValue('enaC')));
+Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', serialize(Tools::GETVALUE('enaC')));
 
-if (Tools::getIsset(Tools::getValue('enaO')))
+if (Tools::getIsset(Tools::GETVALUE('enaO')))
 
-Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', serialize(Tools::getValue('enaO')));
+Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', serialize(Tools::GETVALUE('enaO')));
 
-if (Tools::getIsset(Tools::getValue('payExtraCosts')))
+if (Tools::getIsset(Tools::GETVALUE('payExtraCosts')))
 {
 //kommas voor punten vervangen, en zorgen dat het allemaal getallen zijn
 $arrExtraCosts = array();
 
-foreach (Tools::getValue('payExtraCosts') as $paymentMethodId => $paymentMethod)
+foreach (Tools::GETVALUE('payExtraCosts') as $paymentMethodId => $paymentMethod)
 {
 foreach ($paymentMethod as $type => $value)
 {
@@ -364,17 +364,17 @@ $arrExtraCosts[$paymentMethodId][$type] = $value;
 }
 Configuration::updateValue('PAYNL_PAYMENT_EXTRA_COSTS', serialize($arrExtraCosts));
 }
-if (Tools::getIsset(Tools::getValue('validateOnStart')))
+if (Tools::getIsset(Tools::GETVALUE('validateOnStart')))
 
-Configuration::updateValue('PAYNL_VALIDATE_ON_START', serialize(Tools::getValue('validateOnStart')));
+Configuration::updateValue('PAYNL_VALIDATE_ON_START', serialize(Tools::GETVALUE('validateOnStart')));
 
 
 $this->displayConf();
 }
 else
-{
+
 $this->displayErrors();
-}
+
 }
 
 $this->displayPaynl();
@@ -385,38 +385,37 @@ return $this->_html;
 
 public function displayConf()
 {
-$this->_html .= '
+$this->_html .=  '
 <div class="conf confirm">
-  <img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation') . '" />
-  '.$this->l('Settings updated') . '
+  <img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />
+  '.$this->l('Settings updated').'
 </div>';
 }
 
 public function displayErrors()
 {
 $nbErrors = sizeof($this->_postErrors);
-$this->_html .= '
+$this->_html .=  '
 <div class="alert error">
-  <h3>'.($nbErrors > 1 ? $this->l('There are') : $this->l('There is')) . ' '.$nbErrors.' '.($nbErrors > 1 ? $this->l('errors') : $this->l('error')) . '</h3>
+  <h3>'.($nbErrors > 1 ? $this->l('There are') : $this->l('There is')).' '.$nbErrors.' '.($nbErrors > 1 ? $this->l('errors') : $this->l('error')).'</h3>
   <ol>';
-foreach ($this->_postErrors AS $error)
-$this->_html .= '<li>'.$error . '</li>';
-$this->_html .= '
+foreach ($this->_postErrors as $error)
+$this->_html .=  '<li>'.$error.'</li>';
+$this->_html .=  '
   </ol>
 </div>';
 }
 
 public function displayPaynl()
 {
-$this->_html .= '
+$this->_html .=  '
 <img src="../modules/paynl_paymentmethods/pay.nl.logo.gif" height="20%" width="20%" style="float:left; margin-right:15px;" />
-<b>'.$this->l('This module allows you to accept payments by Pay.nl.') . '</b>
+<b>'.$this->l('This module allows you to accept payments by Pay.nl.').'</b>
 <br /><br /><br />';
 }
 
 public function displayFormSettings()
 {
-
 $arrConfig = array();
 $arrConfig[] = 'PAYNL_TOKEN';
 $arrConfig[] = 'PAYNL_SERVICE_ID';
@@ -432,50 +431,50 @@ $arrConfig[] = 'PAYNL_VALIDATE_ON_START';
 $conf = Configuration::getMultiple($arrConfig);
 
 
-$paynltoken = array_key_exists('paynltoken', Tools::getValue) ? Tools::getValue('paynltoken') : (array_key_exists('PAYNL_TOKEN', $conf) ? $conf['PAYNL_TOKEN'] : '');
-$service_id = array_key_exists('service_id', Tools::getValue) ? Tools::getValue('service_id') : (array_key_exists('PAYNL_SERVICE_ID', $conf) ? $conf['PAYNL_SERVICE_ID'] : '');
+$paynltoken = array_key_exists('paynltoken', Tools::GETVALUE) ? Tools::GETVALUE('paynltoken') : (array_key_exists('PAYNL_TOKEN', $conf) ? $conf['PAYNL_TOKEN'] : '');
+$service_id = array_key_exists('service_id', Tools::GETVALUE) ? Tools::GETVALUE('service_id') : (array_key_exists('PAYNL_SERVICE_ID', $conf) ? $conf['PAYNL_SERVICE_ID'] : '');
 
-$wait = array_key_exists('wait', Tools::getValue) ? Tools::getValue('wait') : (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
-$success = array_key_exists('success', Tools::getValue) ? Tools::getValue('success') : (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
-//$amountnotvalid = array_key_exists('amountnotvalid', Tools::getValue) ? Tools::getValue('amountnotvalid') : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
-$cancel = array_key_exists('cancel', Tools::getValue) ? Tools::getValue('cancel') : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
+$wait = array_key_exists('wait', Tools::GETVALUE) ? Tools::GETVALUE('wait') : (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
+$success = array_key_exists('success', Tools::GETVALUE) ? Tools::GETVALUE('success') : (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
+//$amountnotvalid = array_key_exists('amountnotvalid', Tools::GETVALUE) ? Tools::GETVALUE('amountnotvalid') : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
+$cancel = array_key_exists('cancel', Tools::GETVALUE) ? Tools::GETVALUE('cancel') : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
 
 // Get states
 $states = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 
 $osWait = '<select name="wait">';
-foreach ($states AS $state)
+foreach ($states as $state)
 {
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $wait) ? ' selected' : '';
-$osWait .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$osWait .=  '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osWait .= '</select>';
+$osWait .=  '</select>';
 $osSuccess = '<select name="success">';
-foreach ($states AS $state)
+foreach ($states as $state)
 {
 if ($state['logable'] == 1)
 {
 $selected = ($state['id_order_state'] == $success) ? ' selected' : '';
-$osSuccess .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$osSuccess .=  '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osSuccess .= '</select>';
+$osSuccess .=  '</select>';
 
 $osCancel = '<select name="cancel">';
-foreach ($states AS $state)
+foreach ($states as $state)
 {
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $cancel) ? ' selected' : '';
-$osCancel .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$osCancel .=  '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osCancel .= '</select>';
+$osCancel .=  '</select>';
 
-$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM ' . _DB_PREFIX_.'module_country WHERE id_module = '.(int) ($this->id));
+$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)($this->id));
 foreach ($countries as $country)
 $this->country[$country['id_country']] = $country['id_country'];
 
@@ -494,7 +493,7 @@ $profiles = $profiles['paymentOptions'];
 
 
 
-$countries = Country::getCountries((int) ($this->context->cookie->id_lang));
+$countries = Country::getCountries((int)($this->context->cookie->id_lang));
 
 
 
@@ -534,9 +533,9 @@ $profilesOrder = array();
 }
 
 if (Tools::strlen($extraCosts) == 0)
-{
+
 $extraCosts = array();
-}
+
 else
 {
 $extraCosts = @unserialize($extraCosts);
@@ -559,14 +558,14 @@ $validateOnStart = array();
 }
 
 
-$exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions') . '</h2>';
-$exceptions.='<table border="1"><tr><th>'.$this->l('Country') . '</th><th colspan="' . count($profiles) . '">'.$this->l('Payment methods') . '</th></tr>';
-$exceptions.='<tr><td>&nbsp;</td>';
+$exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>';
+$exceptions.= '<table border="1"><tr><th>'.$this->l('Country').'</th><th colspan="' . count($profiles).'">'.$this->l('Payment methods').'</th></tr>';
+$exceptions.= '<tr><td>&nbsp;</td>';
 foreach ($profiles as $profile)
-{
-$exceptions.= '<td>'.$profile['name'].'</td>';
-}
-$exceptions.= '</tr>';
+
+$exceptions.=  '<td>'.$profile['name'].'</td>';
+
+$exceptions.=  '</tr>';
 
 foreach ($countries as $countryid => $country)
 {
@@ -576,41 +575,41 @@ continue;
 
 
 
-$exceptions.="<tr><td>" .$country['name'] . "</td>";
+$exceptions.= '<tr><td>' .$country["name"].'</td>';
 
 foreach ($profiles as $profile)
 {
-$exceptions.="<td>";
+$exceptions.= '<td>';
 
 if (!$forceProfilesEnable)
 {
 
-$exceptions.='<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'.(Tools::getIsset($profilesEnable[$countryid][$profile['id']]) ? ' checked="checked"' : '') . ' />';
+$exceptions.= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'.(Tools::getIsset($profilesEnable[$countryid][$profile['id']]) ? ' checked="checked"' : '').' />';
 }
 else
-{
-$exceptions.='<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'" checked="checked" />';
-}
 
-$exceptions.='</td>';
-}
-$exceptions.="</tr>";
-}
-$exceptions.="</table>";
+$exceptions.= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'" checked="checked" />';
 
-$exceptions.= '<br /><h2 class="space">'.$this->l('Payment priority') . '</h2>';
-$exceptions.= '<p>'.$this->l('Lower priority is more important') . '</p>';
-$exceptions.='<table border="1"><tr><th>'.$this->l('Payment method') . '</th><th>'.$this->l('Order') . '</th>';
-$exceptions.= '<th>'.$this->l('Extra costs fixed') . '</th>';
-$exceptions.= '<th>'.$this->l('Extra costs percentage') . '</th>';
-$exceptions.= '<th>'.$this->l('Extra costs max') . '</th>';
-$exceptions.= '<th>'.$this->l('Validate on transaction start') . '</th>';
-$exceptions .= '</tr>';
+
+$exceptions.= '</td>';
+}
+$exceptions.= '</tr>';
+}
+$exceptions.= '</table>';
+
+$exceptions.=  '<br /><h2 class="space">'.$this->l('Payment priority').'</h2>';
+$exceptions.=  '<p>'.$this->l('Lower priority is more important').'</p>';
+$exceptions.= '<table border="1"><tr><th>'.$this->l('Payment method').'</th><th>'.$this->l('Order').'</th>';
+$exceptions.=  '<th>'.$this->l('Extra costs fixed').'</th>';
+$exceptions.=  '<th>'.$this->l('Extra costs percentage').'</th>';
+$exceptions.=  '<th>'.$this->l('Extra costs max').'</th>';
+$exceptions.=  '<th>'.$this->l('Validate on transaction start').'</th>';
+$exceptions .=  '</tr>';
 foreach ($profiles as $profile)
 {
-$exceptions.='<tr><td>'.$profile['name'] . "</td><td>";
+$exceptions.= '<tr><td>'.$profile['name'].'</td><td>';
 
-$exceptions.='<select name="enaO['.$profile['id'].']">';
+$exceptions.= '<select name="enaO['.$profile['id'].']">';
 $value = '';
 if (Tools::getIsset($profilesOrder[$profile['id']]))
 
@@ -626,18 +625,18 @@ if ($value == $i)
 $selected = 'selected="selected"';
 
 
-$exceptions.= '<option value="'.$i.'" '.$selected.'>'.$this->l('Priority') . ' '.($i + 1) . '</option>';
+$exceptions.=  '<option value="'.$i.'" '.$selected.'>'.$this->l('Priority').' '.($i + 1).'</option>';
 }
-$exceptions.='</select>';
-$exceptions.='</td>';
+$exceptions.= '</select>';
+$exceptions.= '</td>';
 
 $fixed = @$extraCosts[$profile['id']]['fixed'];
 $percentage = @$extraCosts[$profile['id']]['percentage'];
 $max = @$extraCosts[$profile['id']]['max'];
 
-$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
-$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';
-$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max . '" /></td>';
+$exceptions .=  '<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
+$exceptions .=  '<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';
+$exceptions .=  '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max . '" /></td>';
 
 $validateOnStartChecked = '';
 if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profile['id']] == 1)
@@ -645,39 +644,39 @@ if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profi
 $validateOnStartChecked = "checked='checked'";
 
 
-$exceptions .= '<td><input type="hidden" name="validateOnStart['.$profile['id'].']" value="0" /><input '.$validateOnStartChecked.' name="validateOnStart['.$profile['id'].']"  type="checkbox" value="1" /></td>';
+$exceptions .=  '<td><input type="hidden" name="validateOnStart['.$profile['id'].']" value="0" /><input '.$validateOnStartChecked.' name="validateOnStart['.$profile['id'].']"  type="checkbox" value="1" /></td>';
 
-$exceptions .= '</tr>';
+$exceptions .=  '</tr>';
 }
-$exceptions.= '</table>';
+$exceptions.=  '</table>';
 } catch (Exception $ex) {
-$exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions') . '</h2>' .
+$exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>' .
 '<br />'.$this->l('Payment restrictions available after connecting to Pay.nl');
 }
 
 
 
-$this->_html .= '
+$this->_html .=  '
 <form action="'.$_SERVER['REQUEST_URI'].'" method="post">
 <fieldset>
-  <legend><img src="../img/admin/contact.gif" />'.$this->l('Settings') . '</legend>
+  <legend><img src="../img/admin/contact.gif" />'.$this->l('Settings').'</legend>
   
-  <label>'.$this->l('Token') . '</label>
-  <div class="margin-form"><input type="text" size="33" name="paynltoken" value="' . htmlentities($paynltoken, ENT_COMPAT, 'UTF-8') . '" /></div>
-  <label>'.$this->l('Service ID') . '</label>
-  <div class="margin-form"><input type="text" size="33" name="service_id" value="' . htmlentities($service_id, ENT_COMPAT, 'UTF-8') . '" /></div>
+  <label>'.$this->l('Token').'</label>
+  <div class="margin-form"><input type="text" size="33" name="paynltoken" value="'.htmlentities($paynltoken, ENT_COMPAT, 'UTF-8').'" /></div>
+  <label>'.$this->l('Service ID').'</label>
+  <div class="margin-form"><input type="text" size="33" name="service_id" value="'.htmlentities($service_id, ENT_COMPAT, 'UTF-8').'" /></div>
   <br>
   <hr>
   <br>
-  <label>'.$this->l('Pending') . '</label>
+  <label>'.$this->l('Pending').'</label>
   <div class="margin-form">'.$osWait . ' Alleen van toepassing op betalingen waarbij extra kosten worden gerekend, de status gaat daarna meteen naar success</div> 
-  <label>'.$this->l('Success') . '</label>
+  <label>'.$this->l('Success').'</label>
   <div class="margin-form">'.$osSuccess.'</div>
-  <label>'.$this->l('Cancel') . '</label>
-  <div class="margin-form">'.$osCancel . '</div>
+  <label>'.$this->l('Cancel').'</label>
+  <div class="margin-form">'.$osCancel.'</div>
   <br />'
 .$exceptions .
-'<br /><center><input type="submit" name="submitPaynl" value="'.$this->l('Update settings') . '" class="button" /></center>
+'<br /><center><input type="submit" name="submitPaynl" value="'.$this->l('Update settings').'" class="button" /></center>
 </fieldset>
 </form><br /><br />';
 }
