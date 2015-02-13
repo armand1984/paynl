@@ -225,7 +225,8 @@ $this->_domainId = $domainId;
  * Set the description for the transaction
  * @param type $description
  */
-public function setDescription($description) {
+public function setDescription($description)
+{
 $this->_description = $description;
 }
 
@@ -310,7 +311,7 @@ if (!empty($this->_enduser))
 $data['enduser'] = $this->_enduser;
 
 
- if (!empty($this->_extra1))
+if (!empty($this->_extra1))
 
 $data['statsData']['extra1'] = $this->_extra1;
 
