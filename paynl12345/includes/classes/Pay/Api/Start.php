@@ -73,16 +73,16 @@ $this->_transferData = $transferData;
 * @param int $price
 * @param int $quantity
 * @param int $vatPercentage
-* @throws Pay_Exception
+* @throws PayException
 */
 public function addProduct($id, $description, $price, $quantity, $vatPercentage = 'H')
 {
 if (!is_numeric($price))
 
-throw new Pay_Exception('Price moet numeriek zijn', 1);
+throw new PayException('Price moet numeriek zijn', 1);
 
 if (!is_numeric($quantity))
-throw new Pay_Exception('Quantity moet numeriek zijn', 1);
+throw new PayException('Quantity moet numeriek zijn', 1);
 
 
 $quantity = $quantity * 1;
@@ -145,7 +145,7 @@ $this->_enduser = $enduser;
 * Set the amount(in cents) of the transaction
 *
 * @param int $amount
-* @throws Pay_Exception
+* @throws PayException
 */
 public function setAmount($amount)
 {
@@ -154,7 +154,7 @@ if (is_numeric($amount))
 $this->_amount = $amount;
 else
 
-throw new Pay_Exception('Amount is niet numeriek', 1);
+throw new PayException('Amount is niet numeriek', 1);
 
 }
 
@@ -166,7 +166,7 @@ $this->_paymentOptionId = $paymentOptionId;
 
 else
 
-throw new Pay_Exception('PaymentOptionId is niet numeriek', 1);
+throw new PayException('PaymentOptionId is niet numeriek', 1);
 
 }
 
@@ -177,7 +177,7 @@ if (is_numeric($paymentOptionSubId))
 $this->_paymentOptionSubId = $paymentOptionSubId;
 
 else
-throw new Pay_Exception('PaymentOptionSubId is niet numeriek', 1);
+throw new PayException('PaymentOptionSubId is niet numeriek', 1);
 
 }
 
@@ -234,7 +234,7 @@ $this->_description = $description;
  * Get the post data, if not all required variables are set, this wil rthrow an exception
  * 
  * @return array
- * @throws Pay_Exception
+ * @throws PayException
  */
 protected function _getPostData()
 {
@@ -242,18 +242,18 @@ $data = parent::_getPostData();
 
 if ($this->_apiToken == '')
 
-throw new Pay_Exception('apiToken not set', 1);
+throw new PayException('apiToken not set', 1);
 else
 
 $data['token'] = $this->_apiToken;
 
 if (empty($this->_serviceId))
-throw new Pay_Exception('apiToken not set', 1);
+throw new PayException('apiToken not set', 1);
 else
 $data['serviceId'] = $this->_serviceId;
 
 if (empty($this->_amount))
-throw new Pay_Exception('Amount is niet geset', 1);
+throw new PayException('Amount is niet geset', 1);
 else
 $data['amount'] = $this->_amount;
 
@@ -264,7 +264,7 @@ if (!empty($this->_paymentOptionId))
 $data['paymentOptionId'] = $this->_paymentOptionId;
 
 if (empty($this->_finishUrl))
-throw new Pay_Exception('FinishUrl is niet geset', 1);
+throw new PayException('FinishUrl is niet geset', 1);
 else
 $data['finishUrl'] = $this->_finishUrl;
 

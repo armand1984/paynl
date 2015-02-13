@@ -21,10 +21,10 @@ class PaynlPaymentmethodsExchangeModuleFrontController extends ModuleFrontContro
 
 		try{
 			if (strpos($action, 'refund') !== false)
-				throw new Pay_Exception('Ignoring refund');
+				throw new PayException('Ignoring refund');
 
 if (strpos($action, 'pending') !== false)
-throw new Pay_Exception('Ignoring pending');
+throw new PayException('Ignoring pending');
 
 $result = Pay_Helper_Transaction::processTransaction($transactionId);
 }

@@ -46,7 +46,7 @@ $sql = 'SELECT * FROM "'._DB_PREFIX_.'pay_transactions WHERE transaction_id = "'
 $row = $db->getRow($sql);
 if (empty($row))
 
-throw new Pay_Exception('Transaction not found');
+throw new PayException('Transaction not found');
 
 return $row;
 }
@@ -94,7 +94,7 @@ $stateText = self::getStateText($stateId);
 //de transactie ophalen
 try{
 $transaction = self::getTransaction($transactionId);
-} catch (Pay_Exception $ex) {
+} catch (PayException $ex) {
 // transactie is niet gevonden... quickfix, we voegen hem opnieuw toe
 self::addTransaction($transactionId, $result['paymentDetails']['paymentOptionId'], $result['paymentDetails']['amount'], $result['paymentDetails']['paidCurrency'], str_replace('CartId: ', '', $result['statsDetails']['extra1']), 'Inserted after not found');
 
@@ -107,7 +107,7 @@ $orderPaid = self::orderPaid($orderId);
 
 if ($orderPaid == true && $stateText != 'PAID')
 
-throw new Pay_Exception('Order already paid');
+throw new PayException('Order already paid');
 
 
 if ($stateText == $transaction['status'])

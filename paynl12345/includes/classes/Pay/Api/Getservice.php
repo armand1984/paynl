@@ -25,14 +25,14 @@ $data = parent::_getPostData();
 // Check if all required variables are set
 if ($this->_apiToken == '')
 
-throw new Pay_Exception('apiToken not set', 1);
+throw new PayException('apiToken not set', 1);
 else
 
 $data['token'] = $this->_apiToken;
 
 if (empty($this->_serviceId))
 
-throw new Pay_Exception('serviceId not set', 1);
+throw new PayException('serviceId not set', 1);
 else
 
 $data['serviceId'] = $this->_serviceId;

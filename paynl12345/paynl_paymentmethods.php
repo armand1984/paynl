@@ -197,7 +197,7 @@ public function getPaymentMethodName($paymentMethodId)
 $token = Configuration::get('PAYNL_TOKEN');
 $serviceId = Configuration::get('PAYNL_SERVICE_ID');
 
-$apiService = new Pay_Api_Getservice();
+$apiService = new PayApiGetservice();
 $apiService->setApiToken($token);
 $apiService->setServiceId($serviceId);
 
@@ -245,7 +245,7 @@ if ($countryExceptions == false)
 $countryExceptions = array();
 
 
-$apiGetservice = new Pay_Api_Getservice();
+$apiGetservice = new PayApiGetservice();
 $apiGetservice->setApiToken($token);
 $apiGetservice->setServiceId($serviceId);
 
@@ -483,7 +483,7 @@ try {
 $token = Configuration::get('PAYNL_TOKEN');
 $serviceId = Configuration::get('PAYNL_SERVICE_ID');
 
-$serviceApi = new Pay_Api_Getservice();
+$serviceApi = new PayApiGetservice();
 $serviceApi->setApiToken($token);
 $serviceApi->setServiceId($serviceId);
 

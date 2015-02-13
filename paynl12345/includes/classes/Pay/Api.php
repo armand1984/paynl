@@ -104,12 +104,12 @@ return $data;
 private function _getApiUrl()
 {
 if ($this->_version == '')
-throw new Pay_Exception('version not set', 1);
+throw new PayException('version not set', 1);
 
 
-if ($this->_controller == '') throw new Pay_Exception('controller not set', 1);
+if ($this->_controller == '') throw new PayException('controller not set', 1);
 
-if ($this->_action == '') throw new Pay_Exception('action not set', 1);
+if ($this->_action == '') throw new PayException('action not set', 1);
 
 
 return $this->_apiUrl.'/'.$this->_version.'/'.$this->_controller.'/'.$this->_action.'/json/';
@@ -181,13 +181,13 @@ else
 {
 if (isset($arrResult['request']['errorId']) && isset($arrResult['request']['errorMessage']))
 
-throw new Pay_Api_Exception($arrResult['request']['errorId'].' - '.$arrResult['request']['errorMessage']);
+throw new PayApiException($arrResult['request']['errorId'].' - '.$arrResult['request']['errorMessage']);
 
 elseif (isset($arrResult['error']))
 
-throw new Pay_Api_Exception($arrResult['error']);
+throw new PayApiException($arrResult['error']);
 else
-throw new Pay_Api_Exception('Unexpected api result');
+throw new PayApiException('Unexpected api result');
 
 }
 }

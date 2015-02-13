@@ -50,13 +50,13 @@ protected function _getPostData()
 $data = parent::_getPostData();
 if ($this->_apiToken == '')
 
-throw new Pay_Exception('apiToken not set', 1);
+throw new PayException('apiToken not set', 1);
 else
 
 $data['token'] = $this->_apiToken;
 
 if (!isset($this->_postData['transactionId']))
-throw new Pay_Exception('transactionId is not set', 1);
+throw new PayException('transactionId is not set', 1);
 
 return $data;
 }

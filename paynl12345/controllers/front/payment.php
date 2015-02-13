@@ -65,7 +65,7 @@ $total += $extraFee;
 
 $cartId = $cart->id;
 
-$apiStart = new Pay_Api_Start();
+$apiStart = new PayApiStart();
 
 //Klantgegevens meesturen
 /* array(
