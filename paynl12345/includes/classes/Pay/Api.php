@@ -159,7 +159,7 @@ $result = curl_exec($ch);
 curl_close($ch);
 }*/
 
-$arrResult = Tools::json_decode($result, true);
+//$arrResult = Tools::json_decode($result, true);
 
 if ($this->validateResult($arrResult)) return $this->_processResult($arrResult);
 }
