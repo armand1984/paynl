@@ -173,9 +173,10 @@ $arrExtraCosts = Configuration::get('PAYNL_PAYMENT_EXTRA_COSTS');
 $arrExtraCosts = unserialize($arrExtraCosts);
 
 $arrExtraCosts = $arrExtraCosts[$paymentMethodId];
-if (empty($arrExtraCosts)) {
+if (empty($arrExtraCosts))
+
 return 0;
-}
+
 
 $fixed = !empty($arrExtraCosts['fixed']) ? $arrExtraCosts['fixed'] : 0;
 $percentage = !empty($arrExtraCosts['percentage']) ? $arrExtraCosts['percentage'] : 0;
@@ -184,9 +185,9 @@ $max = !empty($arrExtraCosts['max']) ? $arrExtraCosts['max'] : 0;
 $extraCosts = $fixed;
 $extraCosts += ($totalAmount * ($percentage / 100));
 if ($extraCosts > $max && $max != 0)
-{
+
 $extraCosts = $max;
-}
+
 
 return round($extraCosts, 2);
 }
@@ -297,7 +298,9 @@ $this->context->smarty->assign(array(
 ));
 
 return $this->display(_PS_MODULE_DIR_ . '/'.$this->name . '/'.$this->name . '.php', 'views/templates/hook/payment.tpl');
-} else {
+}
+else
+{
 return;
 }
 }
@@ -365,7 +368,9 @@ Configuration::updateValue('PAYNL_VALIDATE_ON_START', serialize(Tools::getValue(
 }
 
 $this->displayConf();
-} else {
+}
+else
+{
 $this->displayErrors();
 }
 }
@@ -376,7 +381,8 @@ $this->displayFormSettings();
 return $this->_html;
 }
 
-public function displayConf() {
+public function displayConf()
+{
 $this->_html .= '
 <div class="conf confirm">
   <img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation') . '" />
@@ -397,14 +403,16 @@ $this->_html .= '
 </div>';
 }
 
-public function displayPaynl() {
+public function displayPaynl()
+{
 $this->_html .= '
 <img src="../modules/paynl_paymentmethods/pay.nl.logo.gif" height="20%" width="20%" style="float:left; margin-right:15px;" />
 <b>'.$this->l('This module allows you to accept payments by Pay.nl.') . '</b>
 <br /><br /><br />';
 }
 
-public function displayFormSettings() {
+public function displayFormSettings()
+{
 
 $arrConfig = array();
 $arrConfig[] = 'PAYNL_TOKEN';
@@ -433,7 +441,8 @@ $cancel = array_key_exists('cancel', Tools::getValue) ? Tools::getValue('cancel'
 $states = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 
 $osWait = '<select name="wait">';
-foreach ($states AS $state) {
+foreach ($states AS $state)
+{
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $wait) ? ' selected' : '';
@@ -442,7 +451,8 @@ $osWait .= '<option value="'.$state['id_order_state'].'"'.$selected . '>'.$state
 }
 $osWait .= '</select>';
 $osSuccess = '<select name="success">';
-foreach ($states AS $state) {
+foreach ($states AS $state)
+{
 if ($state['logable'] == 1)
 {
 $selected = ($state['id_order_state'] == $success) ? ' selected' : '';
@@ -452,7 +462,8 @@ $osSuccess .= '<option value="'.$state['id_order_state'].'"'.$selected . '>'.$st
 $osSuccess .= '</select>';
 
 $osCancel = '<select name="cancel">';
-foreach ($states AS $state) {
+foreach ($states AS $state)
+{
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $cancel) ? ' selected' : '';
@@ -546,12 +557,14 @@ $validateOnStart = array();
 $exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions') . '</h2>';
 $exceptions.='<table border="1"><tr><th>'.$this->l('Country') . '</th><th colspan="' . count($profiles) . '">'.$this->l('Payment methods') . '</th></tr>';
 $exceptions.='<tr><td>&nbsp;</td>';
-foreach ($profiles as $profile) {
+foreach ($profiles as $profile)
+{
 $exceptions.= '<td>'.$profile['name'].'</td>';
 }
 $exceptions.= '</tr>';
 
-foreach ($countries as $countryid => $country) {
+foreach ($countries as $countryid => $country)
+{
 if (!Tools::getIsset($this->country[$countryid]))
 {
 continue;
@@ -560,7 +573,8 @@ continue;
 
 $exceptions.="<tr><td>" . $country['name'] . "</td>";
 
-foreach ($profiles as $profile) {
+foreach ($profiles as $profile)
+{
 $exceptions.="<td>";
 
 if (!$forceProfilesEnable)
@@ -587,7 +601,8 @@ $exceptions.= '<th>'.$this->l('Extra costs percentage') . '</th>';
 $exceptions.= '<th>'.$this->l('Extra costs max') . '</th>';
 $exceptions.= '<th>'.$this->l('Validate on transaction start') . '</th>';
 $exceptions .= '</tr>';
-foreach ($profiles as $profile) {
+foreach ($profiles as $profile)
+{
 $exceptions.='<tr><td>'.$profile['name'] . "</td><td>";
 
 $exceptions.='<select name="enaO['.$profile['id'].']">';
@@ -598,7 +613,8 @@ $value = $profilesOrder[$profile['id']];
 }
 
 $valueAmount = count($profiles);
-for ($i = 0; $i < $valueAmount; $i++) {
+for ($i = 0; $i < $valueAmount; $i++)
+{
 $selected = '';
 if ($value == $i)
 {
@@ -661,7 +677,8 @@ $this->_html .= '
 </form><br /><br />';
 }
 
-protected function validateOrderData() {
+protected function validateOrderData()
+{
 return true;
 }
 
