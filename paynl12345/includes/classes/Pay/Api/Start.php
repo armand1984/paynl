@@ -253,7 +253,7 @@ throw new Pay_Exception('Amount is niet geset', 1);
 } else {
 $data['amount'] = $this->_amount;
 }
-if(!empty($this->_currency)){
+if (!empty($this->_currency)){
 $data['transaction']['currency'] = $this->_currency;
 }
 if (!empty($this->_paymentOptionId)) {  
@@ -314,22 +314,22 @@ $data['statsData']['extra2'] = $this->_extra2;
 if (!empty($this->_extra3)) {
 $data['statsData']['extra3'] = $this->_extra3;
 }
-if(!empty($this->_promotorId)){
+if (!empty($this->_promotorId)){
 $data['statsData']['promotorId'] = $this->_promotorId;
 }
-if(!empty($this->_info)){
+if (!empty($this->_info)){
 $data['statsData']['info'] = $this->_info;
 }
-if(!empty($this->_tool)){
+if (!empty($this->_tool)){
 $data['statsData']['tool'] = $this->_tool;
 }
-if(!empty($this->_object)){
+if (!empty($this->_object)){
 $data['statsData']['object'] = $this->_object;
 }
-if(!empty($this->_domainId)){
+if (!empty($this->_domainId)){
 $data['statsData']['domain_id'] = $this->_domainId;
 }
-if(!empty($this->_transferData)){
+if (!empty($this->_transferData)){
 $data['statsData']['transferData'] = $this->_transferData;
 }
 
