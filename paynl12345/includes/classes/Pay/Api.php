@@ -142,7 +142,7 @@ $data = $this->_getPostData();
 
 $apiUrl = $url;
 
-/*if (function_exists('curl_version'))
+if (function_exists('curl_version'))
 {
 $ch = curl_init();
 if ($this->_requestType == self::REQUEST_TYPE_GET)
@@ -157,11 +157,11 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $result = curl_exec($ch);
 curl_close($ch);
-}*/
+}
 
-//$arrResult = Tools::json_decode($result, true);
+$arrResult = Tools::json_decode($result, true);
 
-//if ($this->validateResult($arrResult)) return $this->_processResult($arrResult);
+if ($this->validateResult($arrResult)) return $this->_processResult($arrResult);
 }
 }
 
