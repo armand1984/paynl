@@ -559,13 +559,13 @@ $validateOnStart = array();
 
 
 $exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>';
-$exceptions .= '<table border="1"><tr><th>'.$this->l('Country').'</th><th colspan="' . count($profiles).'">'.$this->l('Payment methods').'</th></tr>';
+$exceptions .= '<table border="1"><tr><th>'.$this->l('Country').'</th><th colspan="'.count($profiles).'">'.$this->l('Payment methods').'</th></tr>';
 $exceptions .= '<tr><td>&nbsp;</td>';
 foreach ($profiles as $profile)
 
-$exceptions.= '<td>'.$profile['name'].'</td>';
+$exceptions .= '<td>'.$profile['name'].'</td>';
 
-$exceptions.= '</tr>';
+$exceptions .= '</tr>';
 
 foreach ($countries as $countryid => $country)
 {
@@ -575,7 +575,7 @@ continue;
 
 
 
-$exceptions .= '<tr><td>' .$country["name"].'</td>';
+$exceptions .= '<tr><td>'.$country['name'].'</td>';
 
 foreach ($profiles as $profile)
 {
@@ -597,13 +597,13 @@ $exceptions .= '</tr>';
 }
 $exceptions .= '</table>';
 
-$exceptions.= '<br /><h2 class="space">'.$this->l('Payment priority').'</h2>';
-$exceptions.= '<p>'.$this->l('Lower priority is more important').'</p>';
+$exceptions .= '<br /><h2 class="space">'.$this->l('Payment priority').'</h2>';
+$exceptions .= '<p>'.$this->l('Lower priority is more important').'</p>';
 $exceptions .= '<table border="1"><tr><th>'.$this->l('Payment method').'</th><th>'.$this->l('Order').'</th>';
-$exceptions.= '<th>'.$this->l('Extra costs fixed').'</th>';
-$exceptions.= '<th>'.$this->l('Extra costs percentage').'</th>';
-$exceptions.= '<th>'.$this->l('Extra costs max').'</th>';
-$exceptions.= '<th>'.$this->l('Validate on transaction start').'</th>';
+$exceptions .= '<th>'.$this->l('Extra costs fixed').'</th>';
+$exceptions .= '<th>'.$this->l('Extra costs percentage').'</th>';
+$exceptions .= '<th>'.$this->l('Extra costs max').'</th>';
+$exceptions .= '<th>'.$this->l('Validate on transaction start').'</th>';
 $exceptions .= '</tr>';
 foreach ($profiles as $profile)
 {
@@ -625,7 +625,7 @@ if ($value == $i)
 $selected = 'selected="selected"';
 
 
-$exceptions.= '<option value="'.$i.'" '.$selected.'>'.$this->l('Priority').' '.($i + 1).'</option>';
+$exceptions .= '<option value="'.$i.'" '.$selected.'>'.$this->l('Priority').' '.($i + 1).'</option>';
 }
 $exceptions .= '</select>';
 $exceptions .= '</td>';
@@ -648,7 +648,7 @@ $exceptions .= '<td><input type="hidden" name="validateOnStart['.$profile['id'].
 
 $exceptions .= '</tr>';
 }
-$exceptions.= '</table>';
+$exceptions .= '</table>';
 } catch (Exception $ex) {
 $exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>' .
 '<br />'.$this->l('Payment restrictions available after connecting to Pay.nl');
@@ -675,7 +675,7 @@ $this->_html .= '
   <label>'.$this->l('Cancel').'</label>
   <div class="margin-form">'.$osCancel.'</div>
   <br />'
-.$exceptions .
+.$exceptions.
 '<br /><center><input type="submit" name="submitPaynl" value="'.$this->l('Update settings').'" class="button" /></center>
 </fieldset>
 </form><br /><br />';
