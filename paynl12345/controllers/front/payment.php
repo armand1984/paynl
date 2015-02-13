@@ -26,14 +26,13 @@ public function initContent()
 
 $cart = $this->context->cart;
 
-$deliveryAddress = new Address((int)$cart->id_address_delivery);
-$invoiceAddress = new Address((int)$cart->id_address_invoice);
-$paymentOptionId = Tools::getValue('pid');
-
+$delivery_address = new Address((int)$cart->id_address_delivery);
+$invoice_address = new Address((int)$cart->id_address_invoice);
+$payment_option_id = Tools::getValue('pid');
 
 $token = Configuration::get('PAYNL_TOKEN');
-$serviceId = Configuration::get('PAYNL_SERVICE_ID');
-$statusPending = Configuration::get('PAYNL_WAIT');
+$service_id = Configuration::get('PAYNL_SERVICE_ID');
+$status_pending = Configuration::get('PAYNL_WAIT');
 
 if (!isset($cart->id))
 {
@@ -48,24 +47,24 @@ $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 //$orderStatus = Configuration::get('PAYNL_WAIT');
 $module = $this->module;
 
-$currencyId = $this->context->currency->id;
+$$currency_id = $this->context->currency->id;
 
-$currencyCode = $this->context->currency->iso_code;
+$currency_code = $this->context->currency->iso_code;
 
-//$paymentMethodName = $module->getPaymentMethodName($paymentOptionId);
+//$paymentMethodName = $module->getPaymentMethodName($payment_option_id);
 
-$extraFee = $module->getExtraCosts($paymentOptionId, $total);
+$extra_fee = $module->getExtraCosts($payment_option_id, $total);
+
+$total += $extra_fee;
+//$cart->additional_shipping_cost = $extra_fee;
 
 
-$total += $extraFee;
-//$cart->additional_shipping_cost = $extraFee;
+//$module->validateOrderPay((int)$cart->id, $orderStatus, $total, $extra_fee, $module->getPaymentMethodName
+//($payment_option_id), null, array(), (int)$$currency_id, false, $customer->secure_key);
 
+$cart_id = $cart->id;
 
-//$module->validateOrderPay((int)$cart->id, $orderStatus, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), null, array(), (int)$currencyId, false, $customer->secure_key);
-
-$cartId = $cart->id;
-
-$apiStart = new PayApiStart();
+$api_start = new PayApiStart();
 
 //Klantgegevens meesturen
 /* array(
@@ -100,97 +99,92 @@ $apiStart = new PayApiStart();
 *  )
 * )
 */
-$arrEnduser = array();
-$arrEnduser['initials'] = $customer->firstname;
-$arrEnduser['lastName'] = $customer->lastname;
+$arr_enduser = array();
+$arr_enduser['initials'] = $customer->firstname;
+$arr_enduser['lastName'] = $customer->lastname;
 
 list($year,$month,$day) = explode('-', $customer->birthday);
-$arrEnduser['dob'] = $day.'-'.$month.'-'.$year;
+$arr_enduser['dob'] = $day.'-'.$month.'-'.$year;
 
-
-$arrEnduser['emailAddress'] = $customer->email;
-
+$arr_enduser['emailAddress'] = $customer->email;
 
 // delivery address
-$arrAddress = array();
-$strAddress = $deliveryAddress->address1.$deliveryAddress->address2;
-$arrStreetHouseNr = Pay_Helper::splitAddress($strAddress);
-$arrAddress['streetName'] = $arrStreetHouseNr[0];
-$arrAddress['streetNumber'] = $arrStreetHouseNr[1];
-$arrAddress['zipCode'] = $deliveryAddress->postcode;
-$arrAddress['city'] = $deliveryAddress->city;
-$country = new Country($deliveryAddress->id_country);
-$arrAddress['countryCode'] = $country->iso_code;
+$arr_address = array();
+$str_address = $delivery_address->address1.$delivery_address->address2;
+$arr_street_house_nr = Pay_Helper::splitAddress($str_address);
+$arr_address['streetName'] = $arr_street_house_nr[0];
+$arr_address['streetNumber'] = $arr_street_house_nr[1];
+$arr_address['zipCode'] = $delivery_address->postcode;
+$arr_address['city'] = $delivery_address->city;
+$country = new Country($delivery_address->id_country);
+$arr_address['countryCode'] = $country->iso_code;
 
-$arrEnduser['address'] = $arrAddress;
+$arr_enduser['address'] = $arr_address;
 
 // invoice address
-$arrAddress = array();
-$arrAddress['initials'] = $customer->firstname;
-$arrAddress['lastName'] = $customer->lastname;
+$arr_address = array();
+$arr_address['initials'] = $customer->firstname;
+$arr_address['lastName'] = $customer->lastname;
 
-$strAddress = $invoiceAddress->address1.$invoiceAddress->address2;
-$arrStreetHouseNr = Pay_Helper::splitAddress($strAddress);
-$arrAddress['streetName'] = $arrStreetHouseNr[0];
-$arrAddress['streetNumber'] = $arrStreetHouseNr[1];
-$arrAddress['zipCode'] = $invoiceAddress->postcode;
-$arrAddress['city'] = $invoiceAddress->city;
-$country = new Country($invoiceAddress->id_country);
-$arrAddress['countryCode'] = $country->iso_code;
-$arrEnduser['invoiceAddress'] = $arrAddress;
+$str_address = $invoice_address->address1.$invoice_address->address2;
+$arr_street_house_nr = Pay_Helper::splitAddress($str_address);
+$arr_address['streetName'] = $arr_street_house_nr[0];
+$arr_address['streetNumber'] = $arr_street_house_nr[1];
+$arr_address['zipCode'] = $invoice_address->postcode;
+$arr_address['city'] = $invoice_address->city;
+$country = new Country($invoice_address->id_country);
+$arr_address['countryCode'] = $country->iso_code;
+$arr_enduser['invoiceAddress'] = $arr_address;
 
-$apiStart->setEnduser($arrEnduser);
-
+$api_start->setEnduser($arr_enduser);
 
 // producten toevoegen
 $products = $cart->getProducts();
 
 foreach ($products as $product)
-$apiStart->addProduct($product['id_product'], $product['name'], round($product['price_wt'] * 100), $product['cart_quantity'], 'H');
+$api_start->addProduct($product['id_product'], $product['name'], round($product['price_wt'] * 100), $product['cart_quantity'], 'H');
 //verzendkosten toevoegen
-$shippingCost = $cart->getTotalShippingCost();
-if ($shippingCost != 0)
+$shipping_cost = $cart->getTotalShippingCost();
+if ($shipping_cost != 0)
 
-$apiStart->addProduct('SHIPPING', 'Verzendkosten', round($shippingCost * 100), 1, 'H');
-
-
-if ($extraFee != 0)
-
-$apiStart->addProduct('PAYMENTFEE', 'Betaalkosten', round($extraFee * 100), 1, 'H');
+$api_start->addProduct('SHIPPING', 'Verzendkosten', round($shipping_cost * 100), 1, 'H');
 
 
-$apiStart->setApiToken($token);
-$apiStart->setServiceId($serviceId);
-$apiStart->setDescription($cart->id);
-$apiStart->setExtra1('CartId: '.$cart->id);
-//$apiStart->setExtra2();
+if ($extra_fee != 0)
 
-$apiStart->setPaymentOptionId($paymentOptionId);
-
-$finishUrl = Context::getContext()->link->getModuleLink('paynl_paymentmethods', 'return');
-$exchangeUrl = Context::getContext()->link->getModuleLink('paynl_paymentmethods', 'exchange');
-$apiStart->setFinishUrl($finishUrl);
-$apiStart->setExchangeUrl($exchangeUrl);
-
-$apiStart->setAmount(round($total * 100));
-
-$apiStart->setCurrency($currencyCode);
-
-$result = $apiStart->doRequest();
-
-$startData = $apiStart->getPostData();
-
-Pay_Helper_Transaction::addTransaction($result['transaction']['transactionId'], $paymentOptionId, round($total * 100), $currencyCode, $cartId, $startData);
+$api_start->addProduct('PAYMENTFEE', 'Betaalkosten', round($extra_fee * 100), 1, 'H');
 
 
-if ($this->module->validateOnStart($paymentOptionId))
+$api_start->setApiToken($token);
+$api_start->setServiceId($service_id);
+$api_start->setDescription($cart->id);
+$api_start->setExtra1('CartId: '.$cart->id);
+//$api_start->setExtra2();
 
-$module->validateOrderPay((int)$cart->id, $statusPending, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), null, array('transaction_id' => $result['transaction']['transactionId']), (int)$currencyId, false, $customer->secure_key);
+$api_start->setPaymentOptionId($payment_option_id);
 
+$finish_url = Context::getContext()->link->getModuleLink('paynl_paymentmethods', 'return');
+$exchange_url = Context::getContext()->link->getModuleLink('paynl_paymentmethods', 'exchange');
+$api_start->setFinishUrl($finish_url);
+$api_start->setExchangeUrl($exchange_url);
 
+$api_start->setAmount(round($total * 100));
+
+$api_start->setCurrency($currency_code);
+
+$result = $api_start->doRequest();
+
+$start_data = $api_start->getPostData();
+
+Pay_Helper_Transaction::addTransaction($result['transaction']['transactionId'], $payment_option_id,
+round($total * 100), $currency_code, $cart_id, $start_data);
+
+if ($this->module->validateOnStart($payment_option_id))
+
+$module->validateOrderPay((int)$cart->id, $status_pending, $total, $extra_fee, $module->getPaymentMethodName
+($payment_option_id), null, array('transaction_id' => $result['transaction']['transactionId']), (int)$$currency_id, false, $customer->secure_key);
 
 Tools::redirect($result['transaction']['paymentURL']);
-
 //$url = $paynl->startTransaction($cart);
 }
 catch (Exception $e)

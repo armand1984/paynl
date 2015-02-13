@@ -16,7 +16,7 @@ class PaynlPaymentmethodsExchangeModuleFrontController extends ModuleFrontContro
 {
 	public function initContent()
 	{
-		$transactionId = Tools::getValue('order_id');
+		$transaction_id = Tools::getValue('order_id');
 		$action = Tools::getValue('action');
 
 		try{
@@ -26,7 +26,7 @@ class PaynlPaymentmethodsExchangeModuleFrontController extends ModuleFrontContro
 if (strpos($action, 'pending') !== false)
 throw new PayException('Ignoring pending');
 
-$result = Pay_Helper_Transaction::processTransaction($transactionId);
+$result = Pay_Helper_Transaction::processTransaction($transaction_id);
 }
 catch (Exception $ex) {
 echo 'TRUE|';

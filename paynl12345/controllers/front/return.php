@@ -17,10 +17,10 @@ class PaynlPaymentmethodsReturnModuleFrontController extends ModuleFrontControll
 public function initContent()
 {
 parent::initContent();
-$transactionId = Tools::getValue('orderId');
+$transaction_id = Tools::getValue('orderId');
 
 try {
-$result = Pay_Helper_Transaction::processTransaction($transactionId);
+$result = Pay_Helper_Transaction::processTransaction($transaction_id);
 
 $order = new Order($result['real_order_id']);
 $customer = new Customer($order->id_customer);
