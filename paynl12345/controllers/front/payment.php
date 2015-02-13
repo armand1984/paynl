@@ -180,7 +180,7 @@ $result = $apiStart->doRequest();
 
 $startData = $apiStart->getPostData();
 
-Pay_Helper_Transaction::addTransaction($result['transaction']['transactionId'], $paymentOptionId, round($total * 100),$currencyCode, $cartId, $startData);
+Pay_Helper_Transaction::addTransaction($result['transaction']['transactionId'], $paymentOptionId, round($total * 100), $currencyCode, $cartId, $startData);
 
 
 if ($this->module->validateOnStart($paymentOptionId))
