@@ -27,51 +27,51 @@
 if ((bool)Configuration::get('PS_MOBILE_DEVICE'))
 	require_once(_PS_MODULE_DIR_ . '/mobile_theme/Mobile_Detect.php');
 
-// Retro 1.3, 'class_exists' cause problem with autoload...
+/* Retro 1.3, 'class_exists' cause problem with autoload... */
 if (version_compare(_PS_VERSION_, '1.4', '<'))
 {
-	// Not exist for 1.3
-	class Shop extends ObjectModel
-	{
-		public $id = 1;
-		public $id_shop_group = 1;
-		
-		public function __construct()
-		{
-		}
+/* Not exist for 1.3*/
+class Shop extends ObjectModel
+{
+public $id = 1;
+public $id_shop_group = 1;
+
+public function __construct()
+{
+}
 
 
-		public static function getShops()
-		{
-			return array(
-				array('id_shop' => 1, 'name' => 'Default shop')
-			);
-		}
+public static function getShops()
+{
+return array(
+array('id_shop' => 1, 'name' => 'Default shop')
+);
+}
 
-		public static function getCurrentShop()
-		{
-				return 1;
-		}
-	}
+public static function getCurrentShop()
+{
+return 1;
+}
+}
 
-	class Logger
-	{
-		public static function AddLog($message, $severity = 2)
-		{
-			$fp = fopen(dirname(__FILE__).'/../logs.txt', 'a+');
-			fwrite($fp, '['.(int)$severity.'] '.Tools::safeOutput($message));
-			fclose($fp);
-		}
-	}
+class Logger
+{
+public static function AddLog($message, $severity = 2)
+{
+$fp = fopen(dirname(__FILE__).'/../logs.txt', 'a+');
+fwrite($fp, '['.(int)$severity.'] '.Tools::safeOutput($message));
+fclose($fp);
+}
+}
 
 }
 
-// Not exist for 1.3 and 1.4
+/*Not exist for 1.3 and 1.4*/
 class Context
 {
-	/**
-	 * @var Context
-	 */
+/**
+* @var Context
+*/
 	protected static $instance;
 
 	/**
@@ -263,7 +263,7 @@ class ShopBackwardModule extends Shop
 		return ShopBackwardModule::CONTEXT_ALL;
 	}
 
-	// Simulate shop for 1.3 / 1.4
+	/* Simulate shop for 1.3 / 1.4*/
 	public function getID()
 	{
 		return 1;
