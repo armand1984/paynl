@@ -28,7 +28,7 @@ throw new Pay_Exception('Ignoring pending');
 
 $result = Pay_Helper_Transaction::processTransaction($transactionId);
 } catch (Exception $ex) {
-echo "TRUE| ";
+echo 'TRUE|';
 echo $ex->getMessage();
 die();
 }
