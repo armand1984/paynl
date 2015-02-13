@@ -14,124 +14,123 @@
 
 class paynl_paymentmethodsPaymentModuleFrontController extends ModuleFrontController {
 
-    public $ssl = true;
-    public $display_column_left = false;
+public $ssl = true;
+public $display_column_left = false;
 
-    /**
-     * @see FrontController::initContent()
-     */
-    public function initContent() {
+/**
+* @see FrontController::initContent()
+*/
+public function initContent()
+{
 
 //        parent::initContent();
-        
-        $cart = $this->context->cart;
-       
-        
-        $deliveryAddress = new Address((int)$cart->id_address_delivery);
-        $invoiceAddress = new Address((int)$cart->id_address_invoice);
-       
-        $paymentOptionId = Tools::getValue('pid');
+
+$cart = $this->context->cart;
+
+$deliveryAddress = new Address((int)$cart->id_address_delivery);
+$invoiceAddress = new Address((int)$cart->id_address_invoice);
+$paymentOptionId = Tools::getValue('pid');
 
 
-        $token = Configuration::get('PAYNL_TOKEN');
-        $serviceId = Configuration::get('PAYNL_SERVICE_ID');
-        
-        $statusPending = Configuration::get('PAYNL_WAIT');
-     
-        if (!isset($cart->id)) {
-            echo "Can't find cart";
-            exit();
-        }
-        try {
-            //validate the order
-            $customer = new Customer($cart->id_customer);
-            $total = (float) $cart->getOrderTotal(true, Cart::BOTH);
+$token = Configuration::get('PAYNL_TOKEN');
+$serviceId = Configuration::get('PAYNL_SERVICE_ID');
+$statusPending = Configuration::get('PAYNL_WAIT');
 
-            //$orderStatus = Configuration::get('PAYNL_WAIT');
-            $module = $this->module;
+if (!isset($cart->id))
+{
+echo "Can't find cart";
+exit();
+}
+try {
+//validate the order
+$customer = new Customer($cart->id_customer);
+$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 
-            $currencyId = $this->context->currency->id;
-            
-            $currencyCode = $this->context->currency->iso_code;
+//$orderStatus = Configuration::get('PAYNL_WAIT');
+$module = $this->module;
 
-            //$paymentMethodName = $module->getPaymentMethodName($paymentOptionId);
-            
-            $extraFee = $module->getExtraCosts($paymentOptionId, $total);
-            
-            
-            $total += $extraFee;
-            //$cart->additional_shipping_cost = $extraFee;
-            
-            
-            //$module->validateOrderPay((int) $cart->id, $orderStatus, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array(), (int) $currencyId, false, $customer->secure_key);
+$currencyId = $this->context->currency->id;
 
-            $cartId = $cart->id;
-            
-            $apiStart = new Pay_Api_Start();
-            
-            //Klantgegevens meesturen
-     /* array(
-     *  initals
-     *  lastName
-     *  language
-     *  accessCode
-     *  gender (M or F)
-     *  dob (DD-MM-YYYY)
-     *  phoneNumber
-     *  emailAddress
-     *  bankAccount
-     *  iban
-     *  bic
-     *  sendConfirmMail
-     *  confirmMailTemplate
-     *  address => array(
-     *      streetName
-     *      streetNumber
-     *      zipCode
-     *      city
-     *      countryCode
-     *  )
-     *  invoiceAddress => array(
-     *      initials
-     *      lastname
-     *      streetName
-     *      streetNumber
-     *      zipCode
-     *      city
-     *      countryCode
-     *  )
-     * )
-            */
-            $arrEnduser = array();
-            $arrEnduser['initials'] = $customer->firstname;
-            $arrEnduser['lastName'] = $customer->lastname;          
+$currencyCode = $this->context->currency->iso_code;
 
-            list($year, $month, $day) = explode('-',$customer->birthday);            
-            $arrEnduser['dob'] = $day.'-'.$month.'-'.$year;
+//$paymentMethodName = $module->getPaymentMethodName($paymentOptionId);
 
-        
-            $arrEnduser['emailAddress'] = $customer->email;
-            
-            
-            // delivery address
-            $arrAddress = array();
-            $strAddress = $deliveryAddress->address1.$deliveryAddress->address2;
-            $arrStreetHouseNr = Pay_Helper::splitAddress($strAddress);
-            $arrAddress['streetName'] = $arrStreetHouseNr[0];
-            $arrAddress['streetNumber'] = $arrStreetHouseNr[1];
-            $arrAddress['zipCode'] = $deliveryAddress->postcode;
-            $arrAddress['city'] = $deliveryAddress->city;
-            $country = new Country($deliveryAddress->id_country);
-            $arrAddress['countryCode'] = $country->iso_code;
-            
-            $arrEnduser['address'] = $arrAddress;
-            
-            // invoice address
-            $arrAddress = array();
-            $arrAddress['initials'] = $customer->firstname;
-            $arrAddress['lastName'] = $customer->lastname;
-            
-            $strAddress = $invoiceAddress->address1.$invoiceAddress->address2;
+$extraFee = $module->getExtraCosts($paymentOptionId, $total);
+
+
+$total += $extraFee;
+//$cart->additional_shipping_cost = $extraFee;
+
+
+//$module->validateOrderPay((int) $cart->id, $orderStatus, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array(), (int) $currencyId, false, $customer->secure_key);
+
+$cartId = $cart->id;
+
+$apiStart = new Pay_Api_Start();
+
+//Klantgegevens meesturen
+/* array(
+*  initals
+*  lastName
+*  language
+*  accessCode
+*  gender (M or F)
+*  dob (DD-MM-YYYY)
+*  phoneNumber
+*  emailAddress
+*  bankAccount
+*  iban
+*  bic
+*  sendConfirmMail
+*  confirmMailTemplate
+*  address => array(
+*      streetName
+*      streetNumber
+*      zipCode
+*      city
+*      countryCode
+*  )
+*  invoiceAddress => array(
+*      initials
+*      lastname
+*      streetName
+*      streetNumber
+*      zipCode
+*      city
+*      countryCode
+*  )
+* )
+*/
+$arrEnduser = array();
+$arrEnduser['initials'] = $customer->firstname;
+$arrEnduser['lastName'] = $customer->lastname;
+
+list($year,$month,$day) = explode('-', $customer->birthday);
+$arrEnduser['dob'] = $day.'-'.$month.'-'.$year;
+
+
+$arrEnduser['emailAddress'] = $customer->email;
+
+
+// delivery address
+$arrAddress = array();
+$strAddress = $deliveryAddress->address1.$deliveryAddress->address2;
+$arrStreetHouseNr = Pay_Helper::splitAddress($strAddress);
+$arrAddress['streetName'] = $arrStreetHouseNr[0];
+$arrAddress['streetNumber'] = $arrStreetHouseNr[1];
+$arrAddress['zipCode'] = $deliveryAddress->postcode;
+$arrAddress['city'] = $deliveryAddress->city;
+$country = new Country($deliveryAddress->id_country);
+$arrAddress['countryCode'] = $country->iso_code;
+
+$arrEnduser['address'] = $arrAddress;
+
+// invoice address
+$arrAddress = array();
+$arrAddress['initials'] = $customer->firstname;
+$arrAddress['lastName'] = $customer->lastname;
+
+$strAddress = $invoiceAddress->address1.$invoiceAddress->address2;
             $arrStreetHouseNr = Pay_Helper::splitAddress($strAddress);
             $arrAddress['streetName'] = $arrStreetHouseNr[0];
             $arrAddress['streetNumber'] = $arrStreetHouseNr[1];
