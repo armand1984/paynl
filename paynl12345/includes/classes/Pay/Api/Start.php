@@ -6,7 +6,7 @@
  *
  * @category  Prestashop module
  * @package   landingpages
- * @author    Brandweb <office@brandweb.ro>
+ * @authorBrandweb <office@brandweb.ro>
  * @copyright 2015 Brandweb
  * @license   GNU General Public License version 2
  * @version   1.0
@@ -118,20 +118,20 @@ $this->_products[] = $arrProduct;
 *  sendConfirmMail
 *  confirmMailTemplate
 *  address => array(
-*      streetName
-*      streetNumber
-*      zipCode
-*      city
-*      countryCode
+*  streetName
+*  streetNumber
+*  zipCode
+*  city
+*  countryCode
 *  )
 *  invoiceAddress => array(
-*      initials
-*      lastname
-*      streetName
-*      streetNumber
-*      zipCode
-*      city
-*      countryCode
+*  initials
+*  lastname
+*  streetName
+*  streetNumber
+*  zipCode
+*  city
+*  countryCode
 *  )
 * )
 * @param array $enduser
@@ -219,121 +219,121 @@ $this->_extra3 = $extra3;
 public function setDomainId($domainId)
 {
 $this->_domainId = $domainId;
-    }
+}
 
-    /**
-     * Set the description for the transaction
-     * @param type $description
-     */
-    public function setDescription($description) {
-        $this->_description = $description;
-    }
+/**
+ * Set the description for the transaction
+ * @param type $description
+ */
+public function setDescription($description) {
+$this->_description = $description;
+}
 
-    /**
-     * Get the post data, if not all required variables are set, this wil rthrow an exception
-     * 
-     * @return array
-     * @throws Pay_Exception
-     */
-    protected function _getPostData() {
-        $data = parent::_getPostData();
+/**
+ * Get the post data, if not all required variables are set, this wil rthrow an exception
+ * 
+ * @return array
+ * @throws Pay_Exception
+ */
+protected function _getPostData() {
+$data = parent::_getPostData();
 
-        if ($this->_apiToken == '') {
-            throw new Pay_Exception('apiToken not set', 1);
-        } else {
-            $data['token'] = $this->_apiToken;
-        }
-        if (empty($this->_serviceId)) {
-            throw new Pay_Exception('apiToken not set', 1);
-        } else {
-            $data['serviceId'] = $this->_serviceId;
-        }
-        if (empty($this->_amount)) {
-            throw new Pay_Exception('Amount is niet geset', 1);
-        } else {
-            $data['amount'] = $this->_amount;
-        }
-        if(!empty($this->_currency)){
-            $data['transaction']['currency'] = $this->_currency;
-        }
-        if (!empty($this->_paymentOptionId)) {  
-            $data['paymentOptionId'] = $this->_paymentOptionId;
-        }
-        if (empty($this->_finishUrl)) {
-            throw new Pay_Exception('FinishUrl is niet geset', 1);
-        } else {
-            $data['finishUrl'] = $this->_finishUrl;
-        }
-        if (!empty($this->_exchangeUrl)) {    
-            $data['transaction']['orderExchangeUrl'] = $this->_exchangeUrl;
-        }
+if ($this->_apiToken == '') {
+throw new Pay_Exception('apiToken not set', 1);
+} else {
+$data['token'] = $this->_apiToken;
+}
+if (empty($this->_serviceId)) {
+throw new Pay_Exception('apiToken not set', 1);
+} else {
+$data['serviceId'] = $this->_serviceId;
+}
+if (empty($this->_amount)) {
+throw new Pay_Exception('Amount is niet geset', 1);
+} else {
+$data['amount'] = $this->_amount;
+}
+if(!empty($this->_currency)){
+$data['transaction']['currency'] = $this->_currency;
+}
+if (!empty($this->_paymentOptionId)) {  
+$data['paymentOptionId'] = $this->_paymentOptionId;
+}
+if (empty($this->_finishUrl)) {
+throw new Pay_Exception('FinishUrl is niet geset', 1);
+} else {
+$data['finishUrl'] = $this->_finishUrl;
+}
+if (!empty($this->_exchangeUrl)) {
+$data['transaction']['orderExchangeUrl'] = $this->_exchangeUrl;
+}
 
-        if (!empty($this->_description)) {
-            $data['transaction']['description'] = $this->_description;
-        }
+if (!empty($this->_description)) {
+$data['transaction']['description'] = $this->_description;
+}
 
-        if (!empty($this->_paymentOptionSubId)) {
-            $data['paymentOptionSubId'] = $this->_paymentOptionSubId;
-        }
+if (!empty($this->_paymentOptionSubId)) {
+$data['paymentOptionSubId'] = $this->_paymentOptionSubId;
+}
 
-        
-        $data['ipAddress'] = $_SERVER['REMOTE_ADDR'];
-        
-        // I set the browser data with dummydata, because most servers dont have the get_browser function available
-        $data['browserData'] = array(
-            'browser_name_regex' => '^mozilla/5\.0 (windows; .; windows nt 5\.1; .*rv:.*) gecko/.* firefox/0\.9.*$',
-            'browser_name_pattern' => 'Mozilla/5.0 (Windows; ?; Windows NT 5.1; *rv:*) Gecko/* Firefox/0.9*',
-            'parent' => 'Firefox 0.9',
-            'platform' => 'WinXP',
-            'browser' => 'Firefox',
-            'version' => 0.9,
-            'majorver' => 0,
-            'minorver' => 9,
-            'cssversion' => 2,
-            'frames' => 1,
-            'iframes' => 1,
-            'tables' => 1,
-            'cookies' => 1,
-        );
-        if (!empty($this->_products)) {
-            $data['saleData']['invoiceDate'] = date('d-m-Y');
-            $data['saleData']['deliveryDate'] = date('d-m-Y', strtotime('+1 day'));
-            $data['saleData']['orderData'] = $this->_products;
-        }
 
-        if (!empty($this->_enduser)) {
-            $data['enduser'] = $this->_enduser;
-        }
+$data['ipAddress'] = $_SERVER['REMOTE_ADDR'];
 
-         if (!empty($this->_extra1)) {
-            $data['statsData']['extra1'] = $this->_extra1;
-        }
-        if (!empty($this->_extra2)) {
-            $data['statsData']['extra2'] = $this->_extra2;
-        }
-        if (!empty($this->_extra3)) {
-            $data['statsData']['extra3'] = $this->_extra3;
-        }
-        if(!empty($this->_promotorId)){
-            $data['statsData']['promotorId'] = $this->_promotorId;
-        }
-        if(!empty($this->_info)){
-            $data['statsData']['info'] = $this->_info;
-        }
-        if(!empty($this->_tool)){
-            $data['statsData']['tool'] = $this->_tool;
-        }
-        if(!empty($this->_object)){
-            $data['statsData']['object'] = $this->_object;
-        }
-        if(!empty($this->_domainId)){
-            $data['statsData']['domain_id'] = $this->_domainId;
-        }
-        if(!empty($this->_transferData)){
-            $data['statsData']['transferData'] = $this->_transferData;
-        }
-        
-        return $data;
-    }
+// I set the browser data with dummydata, because most servers dont have the get_browser function available
+$data['browserData'] = array(
+'browser_name_regex' => '^mozilla/5\.0 (windows; .; windows nt 5\.1; .*rv:.*) gecko/.* firefox/0\.9.*$',
+'browser_name_pattern' => 'Mozilla/5.0 (Windows; ?; Windows NT 5.1; *rv:*) Gecko/* Firefox/0.9*',
+'parent' => 'Firefox 0.9',
+'platform' => 'WinXP',
+'browser' => 'Firefox',
+'version' => 0.9,
+'majorver' => 0,
+'minorver' => 9,
+'cssversion' => 2,
+'frames' => 1,
+'iframes' => 1,
+'tables' => 1,
+'cookies' => 1,
+);
+if (!empty($this->_products)) {
+$data['saleData']['invoiceDate'] = date('d-m-Y');
+$data['saleData']['deliveryDate'] = date('d-m-Y', strtotime('+1 day'));
+$data['saleData']['orderData'] = $this->_products;
+}
+
+if (!empty($this->_enduser)) {
+$data['enduser'] = $this->_enduser;
+}
+
+ if (!empty($this->_extra1)) {
+$data['statsData']['extra1'] = $this->_extra1;
+}
+if (!empty($this->_extra2)) {
+$data['statsData']['extra2'] = $this->_extra2;
+}
+if (!empty($this->_extra3)) {
+$data['statsData']['extra3'] = $this->_extra3;
+}
+if(!empty($this->_promotorId)){
+$data['statsData']['promotorId'] = $this->_promotorId;
+}
+if(!empty($this->_info)){
+$data['statsData']['info'] = $this->_info;
+}
+if(!empty($this->_tool)){
+$data['statsData']['tool'] = $this->_tool;
+}
+if(!empty($this->_object)){
+$data['statsData']['object'] = $this->_object;
+}
+if(!empty($this->_domainId)){
+$data['statsData']['domain_id'] = $this->_domainId;
+}
+if(!empty($this->_transferData)){
+$data['statsData']['transferData'] = $this->_transferData;
+}
+
+return $data;
+}
 
 }
