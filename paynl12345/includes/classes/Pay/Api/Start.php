@@ -14,38 +14,38 @@
 
 class PayApiStart extends PayApi {
 
-protected $_version = 'v3';
-protected $_controller = 'transaction';
-protected $_action = 'start';
-private $_amount;
-private $_currency;
-private $_paymentOptionId;
-private $_paymentOptionSubId;
-private $_finishUrl;
+protected $version = 'v3';
+protected $controller = 'transaction';
+protected $action = 'start';
+private $amount;
+private $currency;
+private $payment_option_id;
+private $payment_option_sub_id;
+private $finish_url;
 
-private $_exchangeUrl;
-private $_description;
-private $_enduser;
-private $_extra1;
-private $_extra2;
-private $_extra3;
+private $exchange_url;
+private $description;
+private $enduser;
+private $extra1;
+private $extra2;
+private $extra3;
 
-private $_promotorId;
-private $_info;
-private $_tool;
-private $_object;
-private $_domainId;
-private $_transferData;
+private $promotor_id;
+private $info;
+private $tool;
+private $object;
+private $domain_id;
+private $transfer_data;
 
-private $_products = array();
+private $products = array();
 
 public function setCurrency($currency)
 {
 $this->_currency = Tools::strtoupper($currency);
 }
-public function setPromotorId($promotorId)
+public function setPromotorId($promotor_id)
 {
-$this->_promotorId = $promotorId;
+$this->promotor_id = $promotor_id;
 }
 public function setInfo($info)
 {
@@ -60,9 +60,9 @@ public function setObject($object)
 $this->_object = $object;
 }
 
-public function setTransferData($transferData)
+public function setTransferData($transfer_data)
 {
-$this->_transferData = $transferData;
+$this->transfer_data = $transfer_data;
 }
 /**
 * Add a product to an order
@@ -72,10 +72,10 @@ $this->_transferData = $transferData;
 * @param string $description
 * @param int $price
 * @param int $quantity
-* @param int $vatPercentage
+* @param int $vat_percentage
 * @throws PayException
 */
-public function addProduct($id, $description, $price, $quantity, $vatPercentage = 'H')
+public function addProduct($id, $description, $price, $quantity, $vat_percentage = 'H')
 {
 if (!is_numeric($price))
 
@@ -84,20 +84,19 @@ throw new PayException('Price moet numeriek zijn', 1);
 if (!is_numeric($quantity))
 throw new PayException('Quantity moet numeriek zijn', 1);
 
-
 $quantity = $quantity * 1;
 
 //description mag maar 45 chars lang zijn
 $description = Tools::substr($description, 0, 45);
 
-$arrProduct = array(
+$arr_product = array(
 'productId' => $id,
 'description' => $description,
 'price' => $price,
 'quantity' => $quantity,
-'vatCode' => $vatPercentage,
+'vatCode' => $vat_percentage,
 );
-$this->_products[] = $arrProduct;
+$this->_products[] = $arr_product;
 }
 
 /**
@@ -158,11 +157,11 @@ throw new PayException('Amount is niet numeriek', 1);
 
 }
 
-public function setPaymentOptionId($paymentOptionId)
+public function setPaymentOptionId($payment_option_id)
 {
-if (is_numeric($paymentOptionId))
+if (is_numeric($payment_option_id))
 
-$this->_paymentOptionId = $paymentOptionId;
+$this->payment_option_id = $payment_option_id;
 
 else
 
@@ -170,11 +169,11 @@ throw new PayException('PaymentOptionId is niet numeriek', 1);
 
 }
 
-public function setPaymentOptionSubId($paymentOptionSubId)
+public function setPaymentOptionSubId($payment_option_sub_id)
 {
-if (is_numeric($paymentOptionSubId))
+if (is_numeric($payment_option_sub_id))
 
-$this->_paymentOptionSubId = $paymentOptionSubId;
+$this->payment_option_sub_id = $payment_option_sub_id;
 
 else
 throw new PayException('PaymentOptionSubId is niet numeriek', 1);
@@ -184,21 +183,21 @@ throw new PayException('PaymentOptionSubId is niet numeriek', 1);
 /**
 * Set the url where the user will be redirected to after payment.
 *
-* @param string $finishUrl
+* @param string $finish_url
 */
-public function setFinishUrl($finishUrl)
+public function setFinishUrl($finish_url)
 {
-$this->_finishUrl = $finishUrl;
+$this->finish_url = $finish_url;
 }
 
 /**
 * Set the comunication url, the pay.nl server will call this url when the status of the transaction changes
 *
-* @param string $exchangeUrl
+* @param string $exchange_url
 */
-public function setExchangeUrl($exchangeUrl)
+public function setExchangeUrl($exchange_url)
 {
-$this->_exchangeUrl = $exchangeUrl;
+$this->exchange_url = $exchange_url;
 }
 
 
@@ -216,9 +215,9 @@ public function setExtra3($extra3)
 {
 $this->_extra3 = $extra3;
 }
-public function setDomainId($domainId)
+public function setDomainId($domain_id)
 {
-$this->_domainId = $domainId;
+$this->domain_id = $domain_id;
 }
 
 /**
@@ -240,17 +239,17 @@ protected function _getPostData()
 {
 $data = parent::_getPostData();
 
-if ($this->_apiToken == '')
+if ($this->api_token == '')
 
 throw new PayException('apiToken not set', 1);
 else
 
-$data['token'] = $this->_apiToken;
+$data['token'] = $this->api_token;
 
-if (empty($this->_serviceId))
+if (empty($this->service_id))
 throw new PayException('apiToken not set', 1);
 else
-$data['serviceId'] = $this->_serviceId;
+$data['serviceId'] = $this->service_id;
 
 if (empty($this->_amount))
 throw new PayException('Amount is niet geset', 1);
@@ -260,26 +259,22 @@ $data['amount'] = $this->_amount;
 if (!empty($this->_currency))
 $data['transaction']['currency'] = $this->_currency;
 
-if (!empty($this->_paymentOptionId))
-$data['paymentOptionId'] = $this->_paymentOptionId;
+if (!empty($this->payment_option_id))
+$data['paymentOptionId'] = $this->payment_option_id;
 
-if (empty($this->_finishUrl))
+if (empty($this->finish_url))
 throw new PayException('FinishUrl is niet geset', 1);
 else
-$data['finishUrl'] = $this->_finishUrl;
+$data['finishUrl'] = $this->finish_url;
 
-if (!empty($this->_exchangeUrl))
-$data['transaction']['orderExchangeUrl'] = $this->_exchangeUrl;
-
+if (!empty($this->exchange_url))
+$data['transaction']['orderExchangeUrl'] = $this->exchange_url;
 
 if (!empty($this->_description))
 $data['transaction']['description'] = $this->_description;
 
-
-if (!empty($this->_paymentOptionSubId))
-$data['paymentOptionSubId'] = $this->_paymentOptionSubId;
-
-
+if (!empty($this->payment_option_sub_id))
+$data['paymentOptionSubId'] = $this->payment_option_sub_id;
 
 $data['ipAddress'] = $_SERVER['REMOTE_ADDR'];
 
@@ -310,7 +305,6 @@ if (!empty($this->_enduser))
 
 $data['enduser'] = $this->_enduser;
 
-
 if (!empty($this->_extra1))
 
 $data['statsData']['extra1'] = $this->_extra1;
@@ -321,8 +315,8 @@ $data['statsData']['extra2'] = $this->_extra2;
 if (!empty($this->_extra3))
 $data['statsData']['extra3'] = $this->_extra3;
 
-if (!empty($this->_promotorId))
-$data['statsData']['promotorId'] = $this->_promotorId;
+if (!empty($this->promotor_id))
+$data['statsData']['promotorId'] = $this->promotor_id;
 
 if (!empty($this->_info))
 $data['statsData']['info'] = $this->_info;
@@ -333,12 +327,11 @@ $data['statsData']['tool'] = $this->_tool;
 if (!empty($this->_object))
 $data['statsData']['object'] = $this->_object;
 
-if (!empty($this->_domainId))
-$data['statsData']['domain_id'] = $this->_domainId;
+if (!empty($this->domain_id))
+$data['statsData']['domain_id'] = $this->domain_id;
 
-if (!empty($this->_transferData))
-$data['statsData']['transferData'] = $this->_transferData;
-
+if (!empty($this->transfer_data))
+$data['statsData']['transferData'] = $this->transfer_data;
 
 return $data;
 }
