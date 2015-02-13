@@ -22,7 +22,6 @@ public $display_column_left = false;
 */
 public function initContent()
 {
-
 //parent::initContent();
 
 $cart = $this->context->cart;
@@ -62,7 +61,7 @@ $total += $extraFee;
 //$cart->additional_shipping_cost = $extraFee;
 
 
-//$module->validateOrderPay((int) $cart->id, $orderStatus, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array(), (int) $currencyId, false, $customer->secure_key);
+//$module->validateOrderPay((int)$cart->id, $orderStatus, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array(), (int)$currencyId, false, $customer->secure_key);
 
 $cartId = $cart->id;
 
@@ -146,18 +145,18 @@ $apiStart->setEnduser($arrEnduser);
 // producten toevoegen
 $products = $cart->getProducts();
 
-foreach($products as $product)
-$apiStart->addProduct($product['id_product'], $product['name'], round($product['price_wt']*100), $product['cart_quantity'], 'H');
+foreach ($products as $product)
+$apiStart->addProduct($product['id_product'], $product['name'], round($product['price_wt']* 100), $product['cart_quantity'], 'H');
 //verzendkosten toevoegen
 $shippingCost = $cart->getTotalShippingCost();
-if($shippingCost != 0)
+if ($shippingCost != 0)
 
-$apiStart->addProduct('SHIPPING', 'Verzendkosten', round($shippingCost*100), 1, 'H');
+$apiStart->addProduct('SHIPPING', 'Verzendkosten', round($shippingCost* 100), 1, 'H');
 
 
-if($extraFee != 0)
+if ($extraFee != 0)
 
-$apiStart->addProduct('PAYMENTFEE', 'Betaalkosten', round($extraFee*100), 1, 'H');
+$apiStart->addProduct('PAYMENTFEE', 'Betaalkosten', round($extraFee* 100), 1, 'H');
 
 
 $apiStart->setApiToken($token);
@@ -170,8 +169,6 @@ $apiStart->setPaymentOptionId($paymentOptionId);
 
 $finishUrl = Context::getContext()->link->getModuleLink('paynl_paymentmethods', 'return');
 $exchangeUrl = Context::getContext()->link->getModuleLink('paynl_paymentmethods', 'exchange');
-      
-   
 $apiStart->setFinishUrl($finishUrl);
 $apiStart->setExchangeUrl($exchangeUrl);
 
@@ -183,12 +180,12 @@ $result = $apiStart->doRequest();
 
 $startData = $apiStart->getPostData();
 
-Pay_Helper_Transaction::addTransaction($result['transaction']['transactionId'], $paymentOptionId, round($total * 100), $currencyCode,$cartId, $startData);
+Pay_Helper_Transaction::addTransaction($result['transaction']['transactionId'],$paymentOptionId, round($total * 100),$currencyCode,$cartId,$startData);
 
 
-if($this->module->validateOnStart($paymentOptionId))
+if ($this->module->validateOnStart($paymentOptionId))
 
-$module->validateOrderPay((int) $cart->id, $statusPending, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array('transaction_id' => $result['transaction']['transactionId']), (int) $currencyId, false, $customer->secure_key);
+$module->validateOrderPay((int)$cart->id, $statusPending, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array('transaction_id' => $result['transaction']['transactionId']), (int)$currencyId, false, $customer->secure_key);
 
 
 
