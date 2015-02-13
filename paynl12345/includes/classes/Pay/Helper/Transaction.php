@@ -159,7 +159,7 @@ $paymentMethodName = $module->getPaymentMethodName($transaction['option_id']);
 
 
 
-$module->validateOrderPay((int)$cart->id, $id_order_state, $transactionAmount / 100, $extraFee, $paymentMethodName, NULL, array('transaction_id' => $transactionId), (int)$currency, false, $customer->secure_key);
+$module->validateOrderPay((int)$cart->id, $id_order_state, $transactionAmount / 100, $extraFee, $paymentMethodName, null, array('transaction_id' => $transactionId), (int)$currency, false, $customer->secure_key);
 
 $real_order_id = Order::getOrderByCartId($cart->id);
 }

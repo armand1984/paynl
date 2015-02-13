@@ -133,19 +133,19 @@ return true;
 
 private function createTransactionTable()
 {
-$sql = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."pay_transactions` (
+$sql = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'pay_transactions` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `transaction_id` varchar(50) NOT NULL,
 `option_id` int(11) NOT NULL,
 `amount` int(11) NOT NULL,
 `currency` char(3) NOT NULL,
 `order_id` int(11) NOT NULL,
-`status` varchar(10) NOT NULL DEFAULT 'PENDING',
+`status` varchar(10) NOT NULL DEFAULT "PENDING",
 `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 `last_update` datetime DEFAULT NULL,
 `start_data` text NOT NULL,
 PRIMARY KEY (`id`)
-  ) ENGINE=myisam AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;";
+  ) ENGINE=myisam AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;';
 
 DB::getInstance()->execute($sql);
 return true;
@@ -636,7 +636,7 @@ $max = @$extraCosts[$profile['id']]['max'];
 
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';
-$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max . '" /></td>';
+$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max .'" /></td>';
 
 $validateOnStartChecked = '';
 if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profile['id']] == 1)
@@ -650,7 +650,7 @@ $exceptions .= '</tr>';
 }
 $exceptions .= '</table>';
 } catch (Exception $ex) {
-$exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>' .
+$exceptions = '<br/><h2 class="space">'.$this->l('Payment restrictions').'</h2>' .
 '<br />'.$this->l('Payment restrictions available after connecting to Pay.nl');
 }
 
@@ -669,7 +669,7 @@ $this->_html .= '
   <hr>
   <br>
   <label>'.$this->l('Pending').'</label>
-  <div class="margin-form">'.$osWait . ' Alleen van toepassing op betalingen waarbij extra kosten worden gerekend, de status gaat daarna meteen naar success</div> 
+  <div class="margin-form">'.$osWait.' Alleen van toepassing op betalingen waarbij extra kosten worden gerekend, de status gaat daarna meteen naar success</div>
   <label>'.$this->l('Success').'</label>
   <div class="margin-form">'.$osSuccess.'</div>
   <label>'.$this->l('Cancel').'</label>

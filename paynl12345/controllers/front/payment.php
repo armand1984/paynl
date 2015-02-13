@@ -61,7 +61,7 @@ $total += $extraFee;
 //$cart->additional_shipping_cost = $extraFee;
 
 
-//$module->validateOrderPay((int)$cart->id, $orderStatus, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array(), (int)$currencyId, false, $customer->secure_key);
+//$module->validateOrderPay((int)$cart->id, $orderStatus, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), null, array(), (int)$currencyId, false, $customer->secure_key);
 
 $cartId = $cart->id;
 
@@ -146,17 +146,17 @@ $apiStart->setEnduser($arrEnduser);
 $products = $cart->getProducts();
 
 foreach ($products as $product)
-$apiStart->addProduct($product['id_product'], $product['name'], round($product['price_wt']* 100), $product['cart_quantity'], 'H');
+$apiStart->addProduct($product['id_product'], $product['name'], round($product['price_wt'] * 100), $product['cart_quantity'], 'H');
 //verzendkosten toevoegen
 $shippingCost = $cart->getTotalShippingCost();
 if ($shippingCost != 0)
 
-$apiStart->addProduct('SHIPPING', 'Verzendkosten', round($shippingCost* 100), 1, 'H');
+$apiStart->addProduct('SHIPPING', 'Verzendkosten', round($shippingCost * 100), 1, 'H');
 
 
 if ($extraFee != 0)
 
-$apiStart->addProduct('PAYMENTFEE', 'Betaalkosten', round($extraFee* 100), 1, 'H');
+$apiStart->addProduct('PAYMENTFEE', 'Betaalkosten', round($extraFee * 100), 1, 'H');
 
 
 $apiStart->setApiToken($token);
@@ -185,7 +185,7 @@ Pay_Helper_Transaction::addTransaction($result['transaction']['transactionId'],$
 
 if ($this->module->validateOnStart($paymentOptionId))
 
-$module->validateOrderPay((int)$cart->id, $statusPending, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), NULL, array('transaction_id' => $result['transaction']['transactionId']), (int)$currencyId, false, $customer->secure_key);
+$module->validateOrderPay((int)$cart->id, $statusPending, $total, $extraFee, $module->getPaymentMethodName($paymentOptionId), null, array('transaction_id' => $result['transaction']['transactionId']), (int)$currencyId, false, $customer->secure_key);
 
 
 
