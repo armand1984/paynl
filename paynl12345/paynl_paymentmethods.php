@@ -636,7 +636,7 @@ $max = @$extraCosts[$profile['id']]['max'];
 
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';
-$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max .'" /></td>';
+$exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max.'" /></td>';
 
 $validateOnStartChecked = '';
 if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profile['id']] == 1)
@@ -650,7 +650,7 @@ $exceptions .= '</tr>';
 }
 $exceptions .= '</table>';
 } catch (Exception $ex) {
-$exceptions = '<br/><h2 class="space">'.$this->l('Payment restrictions').'</h2>' .
+$exceptions = '<br/><h2 class="space">'.$this->l('Payment restrictions').'</h2>'.
 '<br />'.$this->l('Payment restrictions available after connecting to Pay.nl');
 }
 
