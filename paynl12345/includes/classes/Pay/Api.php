@@ -6,7 +6,7 @@
  *
  * @category  Prestashop module
  * @package   paynl_paymentmethods
- * @author Novisites <info@novisites.nl>
+ * @author    Novisites <info@novisites.nl>
  * @copyright 2015 Novisites
  * @license   GNU General Public License version 2
  * @version   3.2.2
