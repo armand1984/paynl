@@ -149,11 +149,9 @@ if ($shipping_cost != 0)
 
 $api_start->addProduct('SHIPPING', 'Verzendkosten', round($shipping_cost * 100), 1, 'H');
 
-
 if ($extra_fee != 0)
 
 $api_start->addProduct('PAYMENTFEE', 'Betaalkosten', round($extra_fee * 100), 1, 'H');
-
 
 $api_start->setApiToken($token);
 $api_start->setServiceId($service_id);
