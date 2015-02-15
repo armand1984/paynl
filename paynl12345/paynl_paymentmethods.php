@@ -67,7 +67,7 @@ $id_order_state_tmp = $id_order_state;
 
 $result = parent::validateOrder($id_cart, $id_order_state_tmp, $amount_paid, $this->displayName, $message, $extra_vars,
 $currency_special, $dont_touch_amount, $secure_key, $shop);
-$order_id = $this->currentOrder;
+$order_id = $this->current_order;
 
 if ($extra_costs == 0 && $id_order_state_tmp == $status_paid)
 {
@@ -314,7 +314,7 @@ return;
 
 }
 
-public function hookPaymentReturn($params)
+public function hookPaymentReturn()
 {
 if (!$this->active)
 return;
@@ -486,7 +486,7 @@ $os_cancel .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$stat
 }
 $os_cancel .= '</select>';
 
-$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.int($this->id));
+$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.($this->id));
 foreach ($countries as $country)
 $this->country[$country['id_country']] = $country['id_country'];
 
@@ -505,7 +505,7 @@ $profiles = $profiles['paymentOptions'];
 
 
 
-$countries = Country::getCountries(int($this->context->cookie->id_lang));
+$countries = Country::getCountries(($this->context->cookie->id_lang));
 
 $force_profiles_enable = false;
 $profiles_enable = (array_key_exists('PAYNL_COUNTRY_EXCEPTIONS', $conf) ? $conf['PAYNL_COUNTRY_EXCEPTIONS'] : '');
@@ -654,8 +654,8 @@ $exceptions .= '</tr>';
 }
 $exceptions .= '</table>';
 } catch (Exception $ex) {
-$exceptions = '<br/><h2 class="space">'.$this->l('Payment restrictions').'</h2>'.
-'<br />'.$this->l('Payment restrictions available after connecting to Pay.nl');
+$exceptions = '<br/><h2 class="space">$this->l("Payment restrictions")
+</h2><br />$this->l("Payment restrictions available after connecting to Pay.nl")';
 }
 
 $this->_html .= '
