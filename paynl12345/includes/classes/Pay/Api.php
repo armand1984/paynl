@@ -140,7 +140,7 @@ $data = $this->getPostData();
 
 $api_url = $url;
 
-if (function_exists('curl_version'))
+/*if (function_exists('curl_version'))
 {
 $ch = curl_init();
 if ($this->request_type == self::REQUEST_TYPE_GET)
@@ -155,8 +155,8 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $result = curl_exec($ch);
 curl_close($ch);
-}
-
+}*/
+$result = '';
 $arr_result = Tools::json_decode($result, true);
 
 if ($this->validateResult($arr_result)) return $this->_processResult($arr_result);
