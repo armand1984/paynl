@@ -14,14 +14,14 @@
 
 class PaynlPaymentmethodsExchangeModuleFrontController extends ModuleFrontController
 {
-	public function initContent()
-	{
-		$transaction_id = Tools::getValue('order_id');
-		$action = Tools::getValue('action');
+public function initContent()
+{
+$transaction_id = Tools::getValue('order_id');
+$action = Tools::getValue('action');
 
-		try{
-			if (strpos($action, 'refund') !== false)
-				throw new PayException('Ignoring refund');
+try{
+if (strpos($action, 'refund') !== false)
+throw new PayException('Ignoring refund');
 
 if (strpos($action, 'pending') !== false)
 throw new PayException('Ignoring pending');
@@ -33,7 +33,7 @@ echo 'TRUE|';
 echo $ex->getMessage();
 die();
 }
-echo 'TRUE| Status updated to '.$result['state'].' for cartId: '.$result['orderId'].' orderId: '.@$result['real_order_id'];
+echo 'TRUE| Status updated to '.$result['state'].' for cartId: '.$result['orderId'].' orderId: '.$result['real_order_id'];
 die();
-	}
+}
 }
