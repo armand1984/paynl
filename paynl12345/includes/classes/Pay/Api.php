@@ -136,7 +136,7 @@ if ($this->getPostData())
 $url = $this->getApiUrl();
 $data = $this->getPostData();
 
-$str_data = http_build_query($data);
+/*$str_data = http_build_query($data);*/
 
 $api_url = $url;
 
