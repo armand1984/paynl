@@ -107,7 +107,6 @@ $uri = 'https://';
 else
 $uri = 'http://';
 
-
 $uri .= $_SERVER['SERVER_NAME'];
 
 if (!empty($_SERVER['REQUEST_URI']))
@@ -117,7 +116,6 @@ $uri_dir = $uri;
 if (Tools::substr($uri, -4) == '.php')
 
 $uri_dir = dirname($uri);
-
 
 if ($uri_dir != 'http:' && $uri_dir != 'https:')
 
@@ -153,13 +151,13 @@ return array($str_street_name, $$str_street_number);
 * @param array $$payment_options
 * @return array
 */
-public static function sort$payment_options($$payment_options)
+public static function paymentOptions($payment_options)
 {
-uasort($$payment_options, 'sort$payment_options');
-return $$payment_options;
+uasort($payment_options, 'sort$payment_options');
+return $payment_options;
 }
 }
-function sort$payment_options($a, $b)
+function paymentOptions($a, $b)
 {
 return strcmp($a['name'], $b['name']);
 }
