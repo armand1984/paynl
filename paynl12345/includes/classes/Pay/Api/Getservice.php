@@ -16,11 +16,11 @@ class PayApiGetservice extends PayApi {
 
 protected $version = 'v3';
 protected $controller = 'transaction';
-protected $_action = 'getService';
+protected $action = 'getService';
 
-protected function _getPostData()
+protected function getPostData()
 {
-$data = parent::_getPostData();
+$data = parent::getPostData();
 
 // Check if all required variables are set
 if ($this->api_token == '')
@@ -45,7 +45,7 @@ return $data;
 * @param array $arr_return
 * @return array the result
 */
-protected function _processResult($arr_return)
+protected function processResult($arr_return)
 {
 if (!$arr_return['request']['result'])
 

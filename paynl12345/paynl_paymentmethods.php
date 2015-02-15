@@ -43,7 +43,7 @@ require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 public function validateOrderPay($id_cart, $id_order_state, $amount_paid, $extra_costs, $payment_method = 'Unknown',
 $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
 {
-$statusPending = Configuration::get('PAYNL_WAIT');
+$status_pending = Configuration::get('PAYNL_WAIT');
 $status_paid = Configuration::get('PAYNL_SUCCESS');
 
 // Als er nog geen order van dit cartid is, de order valideren.
@@ -54,7 +54,7 @@ if ($id_order_state == $status_paid)
 {
 if ($extra_costs != 0)
 
-$id_order_state_tmp = $statusPending;
+$id_order_state_tmp = $status_pending;
 else
 {
 $id_order_state_tmp = $status_paid;
@@ -65,7 +65,8 @@ else
 
 $id_order_state_tmp = $id_order_state;
 
-$result = parent::validateOrder($id_cart, $id_order_state_tmp, $amount_paid, $this->displayName, $message, $extra_vars, $currency_special, $dont_touch_amount, $secure_key, $shop);
+$result = parent::validateOrder($id_cart, $id_order_state_tmp, $amount_paid, $this->displayName, $message, $extra_vars,
+$currency_special, $dont_touch_amount, $secure_key, $shop);
 $order_id = $this->currentOrder;
 
 if ($extra_costs == 0 && $id_order_state_tmp == $status_paid)
@@ -81,16 +82,16 @@ $order = new Order($order_id);
 $shipping_cost = $order->total_shipping;
 
 $new_shipping_costs = $shipping_cost + $extra_costs;
-$extra_costsExcl = round($extra_costs / (1 + (21 / 100)), 2);
+$extra_costs_excl = round($extra_costs / (1 + (21 / 100)), 2);
 
 if ($extra_costs != 0)
 {
 //als de order extra kosten heeft, moeten deze worden toegevoegd.
 $order->total_shipping = $new_shipping_costs;
-$order->total_shipping_tax_excl = $order->total_shipping_tax_excl + $extra_costsExcl;
+$order->total_shipping_tax_excl = $order->total_shipping_tax_excl + $extra_costs_excl;
 $order->total_shipping_tax_incl = $new_shipping_costs;
 
-$order->total_paid_tax_excl = $order->total_paid_tax_excl + $extra_costsExcl;
+$order->total_paid_tax_excl = $order->total_paid_tax_excl + $extra_costs_excl;
 
 $order->total_paid_tax_incl = $order->total_paid_real = $order->total_paid = $order->total_paid + $extra_costs;
 }
@@ -241,13 +242,13 @@ $token = Configuration::get('PAYNL_TOKEN');
 $service_id = Configuration::get('PAYNL_SERVICE_ID');
 
 $method_order = Configuration::get('PAYNL_PAYMENT_METHOD_ORDER');
-$method_order = @unserialize($method_order);
+$method_order = unserialize($method_order);
 if ($method_order == false)
 
 $method_order = array();
 
 $country_exceptions = Configuration::get('PAYNL_COUNTRY_EXCEPTIONS');
-$country_exceptions = @unserialize($country_exceptions);
+$country_exceptions = unserialize($country_exceptions);
 if ($country_exceptions == false)
 
 $country_exceptions = array();
@@ -332,7 +333,6 @@ public function getContent()
 {
 $this->_html = '<h2>'.$this->displayName.'</h2>';
 
-
 if (Tools::getIsset(Tools::GETVALUE('submitPaynl')))
 {
 if (!Tools::getIsset(Tools::GETVALUE('api')))
@@ -374,7 +374,6 @@ Configuration::updateValue('PAYNL_PAYMENT_EXTRA_COSTS', serialize($arr_extra_cos
 if (Tools::getIsset(Tools::GETVALUE('validateOnStart')))
 
 Configuration::updateValue('PAYNL_VALIDATE_ON_START', serialize(Tools::GETVALUE('validateOnStart')));
-
 
 $this->displayConf();
 }
@@ -447,7 +446,8 @@ $wait = array_key_exists('wait', Tools::GETVALUE) ? Tools::GETVALUE('wait')
 : (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
 $success = array_key_exists('success', Tools::GETVALUE) ? Tools::GETVALUE('success')
 : (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
-//$amountnotvalid = array_key_exists('amountnotvalid', Tools::GETVALUE) ? Tools::GETVALUE('amountnotvalid') : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
+//$amountnotvalid = array_key_exists('amountnotvalid', Tools::GETVALUE) ? Tools::GETVALUE('amountnotvalid')
+//: (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
 $cancel = array_key_exists('cancel', Tools::GETVALUE) ? Tools::GETVALUE('cancel')
 : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
 
@@ -516,7 +516,7 @@ $force_profiles_enable = true;
 }
 else
 {
-$profiles_enable = @unserialize($profiles_enable);
+$profiles_enable = unserialize($profiles_enable);
 if ($profiles_enable == false)
 {
 $force_profiles_enable = true;
@@ -534,7 +534,7 @@ $profiles_order = array();
 
 else
 {
-$profiles_order = @unserialize($profiles_order);
+$profiles_order = unserialize($profiles_order);
 if ($profiles_order == false)
 
 $profiles_order = array();
@@ -547,7 +547,7 @@ $extra_costs = array();
 
 else
 {
-$extra_costs = @unserialize($extra_costs);
+$extra_costs = unserialize($extra_costs);
 if ($extra_costs == false)
 
 $extra_costs = array();
@@ -559,13 +559,12 @@ $validate_on_start = array();
 
 else
 {
-$validate_on_start = @unserialize($validate_on_start);
+$validate_on_start = unserialize($validate_on_start);
 if ($validate_on_start == false)
 
 $validate_on_start = array();
 
 }
-
 
 $exceptions = '<br /><h2 class="space">'.$this->l('Payment restrictions').'</h2>';
 $exceptions .= '<table border="1"><tr><th>'.$this->l('Country').'</th><th colspan="'.count($profiles).'">'.$this->l('Payment methods').'</th></tr>';
@@ -582,8 +581,6 @@ if (!Tools::getIsset($this->country[$countryid]))
 
 continue;
 
-
-
 $exceptions .= '<tr><td>'.$country['name'].'</td>';
 
 foreach ($profiles as $profile)
@@ -593,12 +590,12 @@ $exceptions .= '<td>';
 if (!$force_profiles_enable)
 {
 
-$exceptions .= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'.(Tools::getIsset($profiles_enable[$countryid][$profile['id']]) ? ' checked="checked"' : '').' />';
+$exceptions .= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'
+.(Tools::getIsset($profiles_enable[$countryid][$profile['id']]) ? ' checked="checked"' : '').' />';
 }
 else
 
 $exceptions .= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'" checked="checked" />';
-
 
 $exceptions .= '</td>';
 }
@@ -637,9 +634,9 @@ $exceptions .= '<option value="'.$i.'" '.$selected.'>'.$this->l('Priority').' '.
 $exceptions .= '</select>';
 $exceptions .= '</td>';
 
-$fixed = @$extra_costs[$profile['id']]['fixed'];
-$percentage = @$extra_costs[$profile['id']]['percentage'];
-$max = @$extra_costs[$profile['id']]['max'];
+$fixed = $extra_costs[$profile['id']]['fixed'];
+$percentage = $extra_costs[$profile['id']]['percentage'];
+$max = $extra_costs[$profile['id']]['max'];
 
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';

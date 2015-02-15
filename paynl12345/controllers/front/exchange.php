@@ -19,7 +19,7 @@ class PaynlPaymentmethodsExchangeModuleFrontController extends ModuleFrontContro
 		$transaction_id = Tools::getValue('order_id');
 		$action = Tools::getValue('action');
 
-		try  {
+		try{
 			if (strpos($action, 'refund') !== false)
 				throw new PayException('Ignoring refund');
 

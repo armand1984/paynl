@@ -28,7 +28,7 @@ protected $controller = 'transaction';
 *
 * @var string The action
 */
-protected $_action = 'info';
+protected $action = 'info';
 
 /**
 * Set the transaction id for the request
@@ -45,9 +45,9 @@ $this->post_data['transactionId'] = $transaction_id;
 * @return array The data to post
 * @throws Pay_Exception
 */
-protected function _getPostData()
+protected function getPostData()
 {
-$data = parent::_getPostData();
+$data = parent::getPostData();
 if ($this->api_token == '')
 
 throw new PayException('apiToken not set', 1);

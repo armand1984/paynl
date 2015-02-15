@@ -85,12 +85,12 @@ public function setApiToken($api_token)
 $this->api_token = $api_token;
 }
 
-protected function _getPostData()
+protected function getPostData()
 {
 return $this->post_data;
 }
 
-protected function _processResult($data)
+protected function processResult($data)
 {
 return $data;
 }
@@ -101,7 +101,7 @@ return $data;
 * @return string The full url to the api
 * @throws Pay_Exception
 */
-private function _getApiUrl()
+private function getApiUrl()
 {
 if ($this->_version == '')
 throw new PayException('version not set', 1);
@@ -120,7 +120,7 @@ return $this->api_url.'/'.$this->_version.'/'.$this->_controller.'/'.$this->_act
 */
 public function getPostData()
 {
-return $this->_getPostData();
+return $this->getPostData();
 }
 /**
 * Do the request and get the result
@@ -131,10 +131,10 @@ return $this->_getPostData();
 */
 public function doRequest()
 {
-if ($this->_getPostData())
+if ($this->getPostData())
 {
-$url = $this->_getApiUrl();
-$data = $this->_getPostData();
+$url = $this->getApiUrl();
+$data = $this->getPostData();
 
 			$str_data = http_build_query($data);
 
