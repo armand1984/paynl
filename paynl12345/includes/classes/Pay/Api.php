@@ -136,7 +136,7 @@ if ($this->getPostData())
 $url = $this->getApiUrl();
 $data = $this->getPostData();
 
-			$str_data = http_build_query($data);
+$str_data = http_build_query($data);
 
 $api_url = $url;
 
@@ -156,7 +156,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $result = curl_exec($ch);
 curl_close($ch);
 }*/
-$result = '';
+$result = $api_url;
 $arr_result = Tools::json_decode($result, true);
 
 if ($this->validateResult($arr_result)) return $this->_processResult($arr_result);
