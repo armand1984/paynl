@@ -134,7 +134,7 @@ public function doRequest()
 if ($this->getPostData())
 {
 $url = $this->getApiUrl();
-$data = $this->getPostData();
+/*$data = $this->getPostData();*/
 
 /*$str_data = http_build_query($data);*/
 
