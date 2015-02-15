@@ -21,7 +21,7 @@ const REQUEST_TYPE_GET = 0;
 *
 * @var string the url to the pay.nl api
 */
-protected $apiUrl = 'http://rest-api.pay.nl';
+protected $api_url = 'http://rest-api.pay.nl';
 /**
 *
 * @var string The version af the api to use
@@ -47,30 +47,30 @@ protected $service_id = '';
 *
 * @var string the API token
 */
-protected $_apiToken = '';
+protected $api_token = '';
 
 /**
 *
 * @var int The request type (POST or GET) to use when calling the api. use Pay_Api::REQUEST_TYPE_POST or  Pay_Api::REQUEST_TYPE_GET for this variable
 */
-protected $_requestType = self::REQUEST_TYPE_GET;
+protected $request_type = self::REQUEST_TYPE_GET;
 
 /**
 *
 * @var array The data to post to the pay.nl server
 */
-protected $_postData = array();
+protected $post_data = array();
 
 
 /**
 * Set the serviceid
 * The serviceid always starts with SL- and can be found on: https://admin.pay.nl/programs/programs
 * 
-* @param string $serviceId
+* @param string $service_id
 */
-public function setServiceId($serviceId)
+public function setServiceId($service_id)
 {
-$this->_serviceId = $serviceId;
+$this->service_id = $service_id;
 }
 
 /**
@@ -78,16 +78,16 @@ $this->_serviceId = $serviceId;
 * The API token is used to identify your company.
 * The API token can be found on: https://admin.pay.nl/my_merchant on the bottom
 * 
-* @param string $apiToken
+* @param string $api_token
 */
-public function setApiToken($apiToken)
+public function setApiToken($api_token)
 {
-$this->_apiToken = $apiToken;
+$this->api_token = $api_token;
 }
 
 protected function _getPostData()
 {
-return $this->_postData;
+return $this->post_data;
 }
 
 protected function _processResult($data)
@@ -106,13 +106,11 @@ private function _getApiUrl()
 if ($this->_version == '')
 throw new PayException('version not set', 1);
 
-
 if ($this->_controller == '') throw new PayException('controller not set', 1);
 
 if ($this->_action == '') throw new PayException('action not set', 1);
 
-
-return $this->_apiUrl.'/'.$this->_version.'/'.$this->_controller.'/'.$this->_action.'/json/';
+return $this->api_url.'/'.$this->_version.'/'.$this->_controller.'/'.$this->_action.'/json/';
 }
 
 /**
@@ -138,54 +136,54 @@ if ($this->_getPostData())
 $url = $this->_getApiUrl();
 $data = $this->_getPostData();
 
-			$strData = http_build_query($data);
+			$str_data = http_build_query($data);
 
-$apiUrl = $url;
+$api_url = $url;
 
 if (function_exists('curl_version'))
 {
 $ch = curl_init();
-if ($this->_requestType == self::REQUEST_TYPE_GET)
+if ($this->request_type == self::REQUEST_TYPE_GET)
 
-$apiUrl .= '?'.$strData;
+$api_url .= '?'.$str_data;
 
 else
-curl_setopt($ch, CURLOPT_POSTFIELDS, $strData);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $str_data);
 
-curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_URL, $api_url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $result = curl_exec($ch);
 curl_close($ch);
 }
 
-$arrResult = Tools::json_decode($result, true);
+$arr_result = Tools::json_decode($result, true);
 
-if ($this->validateResult($arrResult)) return $this->_processResult($arrResult);
+if ($this->validateResult($arr_result)) return $this->_processResult($arr_result);
 }
 }
 
 /**
 * Validate the result and throw an exception when there is an error
 * 
-* @param array $arrResult The result
+* @param array $arr_result The result
 * @return boolean Result valid
 * @throws Pay_Api_Exception
 */
-protected function validateResult($arrResult)
+protected function validateResult($arr_result)
 {
-if ($arrResult['request']['result'] == 1)
+if ($arr_result['request']['result'] == 1)
 
 return true;
 else
 {
-if (isset($arrResult['request']['errorId']) && isset($arrResult['request']['errorMessage']))
+if (isset($arr_result['request']['errorId']) && isset($arr_result['request']['errorMessage']))
 
-throw new PayApiException($arrResult['request']['errorId'].' - '.$arrResult['request']['errorMessage']);
+throw new PayApiException($arr_result['request']['errorId'].' - '.$arr_result['request']['errorMessage']);
 
-elseif (isset($arrResult['error']))
+elseif (isset($arr_result['error']))
 
-throw new PayApiException($arrResult['error']);
+throw new PayApiException($arr_result['error']);
 else
 throw new PayApiException('Unexpected api result');
 

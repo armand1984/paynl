@@ -24,7 +24,7 @@ public function __construct()
 $this->name = 'paynl_paymentmethods';
 $this->tab = 'payments_gateways';
 $this->version = '3.2.2';
-$this->_postErrors = array();
+$this->post_errors = array();
 $this->author = 'Novisites';
 $this->currencies = true;
 $this->currencies_mode = 'radio';
@@ -40,23 +40,24 @@ if (_PS_VERSION_ < '1.5')
 require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 }
 
-public function validateOrderPay($id_cart, $id_order_state, $amount_paid, $extraCosts, $payment_method = 'Unknown', $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
+public function validateOrderPay($id_cart, $id_order_state, $amount_paid, $extra_costs, $payment_method = 'Unknown',
+$message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
 {
 $statusPending = Configuration::get('PAYNL_WAIT');
-$statusPaid = Configuration::get('PAYNL_SUCCESS');
+$status_paid = Configuration::get('PAYNL_SUCCESS');
 
 // Als er nog geen order van dit cartid is, de order valideren.
-$orderId = Order::getOrderByCartId($id_cart);
-if ($orderId == false)
+$order_id = Order::getOrderByCartId($id_cart);
+if ($order_id == false)
 {
-if ($id_order_state == $statusPaid)
+if ($id_order_state == $status_paid)
 {
-if ($extraCosts != 0)
+if ($extra_costs != 0)
 
 $id_order_state_tmp = $statusPending;
 else
 {
-$id_order_state_tmp = $statusPaid;
+$id_order_state_tmp = $status_paid;
 
 }
 }
@@ -65,33 +66,33 @@ else
 $id_order_state_tmp = $id_order_state;
 
 $result = parent::validateOrder($id_cart, $id_order_state_tmp, $amount_paid, $this->displayName, $message, $extra_vars, $currency_special, $dont_touch_amount, $secure_key, $shop);
-$orderId = $this->currentOrder;
+$order_id = $this->currentOrder;
 
-if ($extraCosts == 0 && $id_order_state_tmp == $statusPaid)
+if ($extra_costs == 0 && $id_order_state_tmp == $status_paid)
 {
 //Als er geen extra kosten zijn, en de order staat op betaald zijn we klaar
 return $result;
 }
 }
 
-if ($orderId && $id_order_state == $statusPaid)
+if ($order_id && $id_order_state == $status_paid)
 {
-$order = new Order($orderId);
-$shippingCost = $order->total_shipping;
+$order = new Order($order_id);
+$shipping_cost = $order->total_shipping;
 
-$newShippingCosts = $shippingCost + $extraCosts;
-$extraCostsExcl = round($extraCosts / (1 + (21 / 100)), 2);
+$new_shipping_costs = $shipping_cost + $extra_costs;
+$extra_costsExcl = round($extra_costs / (1 + (21 / 100)), 2);
 
-if ($extraCosts != 0)
+if ($extra_costs != 0)
 {
 //als de order extra kosten heeft, moeten deze worden toegevoegd.
-$order->total_shipping = $newShippingCosts;
-$order->total_shipping_tax_excl = $order->total_shipping_tax_excl + $extraCostsExcl;
-$order->total_shipping_tax_incl = $newShippingCosts;
+$order->total_shipping = $new_shipping_costs;
+$order->total_shipping_tax_excl = $order->total_shipping_tax_excl + $extra_costsExcl;
+$order->total_shipping_tax_incl = $new_shipping_costs;
 
-$order->total_paid_tax_excl = $order->total_paid_tax_excl + $extraCostsExcl;
+$order->total_paid_tax_excl = $order->total_paid_tax_excl + $extra_costsExcl;
 
-$order->total_paid_tax_incl = $order->total_paid_real = $order->total_paid = $order->total_paid + $extraCosts;
+$order->total_paid_tax_incl = $order->total_paid_real = $order->total_paid = $order->total_paid + $extra_costs;
 }
 
 $result = $order->addOrderPayment($amount_paid, $payment_method, $extra_vars['transaction_id']);
@@ -101,11 +102,11 @@ if (number_format($order->total_paid_tax_incl, 2) !== number_format($amount_paid
 $id_order_state = Configuration::get('PS_OS_ERROR');
 
 //paymentid ophalen
-$orderPayment = OrderPayment::getByOrderId($order->id);
+$order_payment = OrderPayment::getByOrderId($order->id);
 
 $history = new OrderHistory();
 $history->id_order = (int)$order->id;
-$history->changeIdOrderState((int)$id_order_state, $order, $orderPayment);
+$history->changeIdOrderState((int)$id_order_state, $order, $order_payment);
 $res = Db::getInstance()->getRow('
 			SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
 FROM `'._DB_PREFIX_.'orders`
@@ -124,7 +125,12 @@ return $result;
 
 public function install()
 {
-if (!parent::install() || !$this->createTransactionTable() || !Configuration::updateValue('PAYNL_TOKEN', '') || !Configuration::updateValue('PAYNL_SERVICE_ID', '') || !Configuration::updateValue('PAYNL_ORDER_DESC', '') || !Configuration::updateValue('PAYNL_WAIT', '10') || !Configuration::updateValue('PAYNL_SUCCESS', '2') || !Configuration::updateValue('PAYNL_AMOUNTNOTVALID', '0') || !Configuration::updateValue('PAYNL_CANCEL', '6') || !Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', '') || !Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', '') || !$this->registerHook('paymentReturn') || !$this->registerHook('payment'))
+if (!parent::install() || !$this->createTransactionTable() || !Configuration::updateValue('PAYNL_TOKEN', '')
+|| !Configuration::updateValue('PAYNL_SERVICE_ID', '')
+|| !Configuration::updateValue('PAYNL_ORDER_DESC', '') || !Configuration::updateValue('PAYNL_WAIT', '10')
+|| !Configuration::updateValue('PAYNL_SUCCESS', '2') || !Configuration::updateValue('PAYNL_AMOUNTNOTVALID', '0')
+|| !Configuration::updateValue('PAYNL_CANCEL', '6') || !Configuration::updateValue('PAYNL_COUNTRY_EXCEPTIONS', '')
+|| !Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', '') || !$this->registerHook('paymentReturn') || !$this->registerHook('payment'))
 
 return false;
 
@@ -151,13 +157,13 @@ DB::getInstance()->execute($sql);
 return true;
 }
 
-public function validateOnStart($paymentMethodId)
+public function validateOnStart($payment_method_id)
 {
-$arrValidateOnStart = Configuration::get('PAYNL_VALIDATE_ON_START');
-if (!empty($arrValidateOnStart))
+$arr_validate_on_start = Configuration::get('PAYNL_VALIDATE_ON_START');
+if (!empty($arr_validate_on_start))
 {
-$arrValidateOnStart = unserialize($arrValidateOnStart);
-if (Tools::getIsset($arrValidateOnStart[$paymentMethodId]) && $arrValidateOnStart[$paymentMethodId] == 1)
+$arr_validate_on_start = unserialize($arr_validate_on_start);
+if (Tools::getIsset($arr_validate_on_start[$payment_method_id]) && $arr_validate_on_start[$payment_method_id] == 1)
 {
 
 return true;
@@ -167,45 +173,43 @@ return true;
 return false;
 }
 
-public function getExtraCosts($paymentMethodId, $totalAmount)
+public function getExtraCosts($payment_method_id, $total_amount)
 {
-$arrExtraCosts = Configuration::get('PAYNL_PAYMENT_EXTRA_COSTS');
-$arrExtraCosts = unserialize($arrExtraCosts);
+$arr_extra_costs = Configuration::get('PAYNL_PAYMENT_EXTRA_COSTS');
+$arr_extra_costs = unserialize($arr_extra_costs);
 
-$arrExtraCosts = $arrExtraCosts[$paymentMethodId];
-if (empty($arrExtraCosts))
+$arr_extra_costs = $arr_extra_costs[$payment_method_id];
+if (empty($arr_extra_costs))
 
 return 0;
 
+$fixed = !empty($arr_extra_costs['fixed']) ? $arr_extra_costs['fixed'] : 0;
+$percentage = !empty($arr_extra_costs['percentage']) ? $arr_extra_costs['percentage'] : 0;
+$max = !empty($arr_extra_costs['max']) ? $arr_extra_costs['max'] : 0;
 
-$fixed = !empty($arrExtraCosts['fixed']) ? $arrExtraCosts['fixed'] : 0;
-$percentage = !empty($arrExtraCosts['percentage']) ? $arrExtraCosts['percentage'] : 0;
-$max = !empty($arrExtraCosts['max']) ? $arrExtraCosts['max'] : 0;
+$extra_costs = $fixed;
+$extra_costs += ($total_amount * ($percentage / 100));
+if ($extra_costs > $max && $max != 0)
 
-$extraCosts = $fixed;
-$extraCosts += ($totalAmount * ($percentage / 100));
-if ($extraCosts > $max && $max != 0)
+$extra_costs = $max;
 
-$extraCosts = $max;
-
-
-return round($extraCosts, 2);
+return round($extra_costs, 2);
 }
 
-public function getPaymentMethodName($paymentMethodId)
+public function getPaymentMethodName($payment_method_id)
 {
 $token = Configuration::get('PAYNL_TOKEN');
-$serviceId = Configuration::get('PAYNL_SERVICE_ID');
+$service_id = Configuration::get('PAYNL_SERVICE_ID');
 
-$apiService = new PayApiGetservice();
-$apiService->setApiToken($token);
-$apiService->setServiceId($serviceId);
+$api_service = new PayApiGetservice();
+$api_service->setApiToken($token);
+$api_service->setServiceId($service_id);
 
-$result = $apiService->doRequest();
+$result = $api_service->doRequest();
 
-if (Tools::getIsset($result['paymentOptions'][$paymentMethodId]))
+if (Tools::getIsset($result['paymentOptions'][$payment_method_id]))
 
-return $result['paymentOptions'][$paymentMethodId]['name'];
+return $result['paymentOptions'][$payment_method_id]['name'];
 else
 return false;
 
@@ -213,7 +217,12 @@ return false;
 
 public function uninstall()
 {
-if (!Configuration::deleteByName('PAYNL_TOKEN', '') || !Configuration::deleteByName('PAYNL_SERVICE_ID', '') || !Configuration::deleteByName('PAYNL_ORDER_DESC', '') || !Configuration::deleteByName('PAYNL_WAIT', '0') || !Configuration::deleteByName('PAYNL_SUCCESS', '0') || !Configuration::deleteByName('PAYNL_AMOUNTNOTVALID', '0') || !Configuration::deleteByName('PAYNL_CANCEL', '0') || !Configuration::deleteByName('PAYNL_COUNTRY_EXCEPTIONS', '0') || !Configuration::deleteByName('PAYNL_PAYMENT_METHOD_ORDER', '') || !parent::uninstall())
+if (!Configuration::deleteByName('PAYNL_TOKEN', '') || !Configuration::deleteByName('PAYNL_SERVICE_ID', '')
+|| !Configuration::deleteByName('PAYNL_ORDER_DESC', '')
+|| !Configuration::deleteByName('PAYNL_WAIT', '0') || !Configuration::deleteByName('PAYNL_SUCCESS', '0')
+|| !Configuration::deleteByName('PAYNL_AMOUNTNOTVALID', '0') || !Configuration::deleteByName('PAYNL_CANCEL', '0')
+|| !Configuration::deleteByName('PAYNL_COUNTRY_EXCEPTIONS', '0') || !Configuration::deleteByName('PAYNL_PAYMENT_METHOD_ORDER', '')
+|| !parent::uninstall())
 
 return false;
 
@@ -222,80 +231,78 @@ return true;
 
 public function hookPayment($params)
 {
-$objCurrency = $this->getCurrency();
-$intOrderAmount = round(number_format(Tools::convertPrice($params['cart']->getOrderTotal(), $objCurrency), 2, '.', '') * 100);
+$obj_currency = $this->getCurrency();
+$int_order_amount = round(number_format(Tools::convertPrice($params['cart']->getOrderTotal(), $obj_currency), 2, '.', '') * 100);
 
 if ($this->validateOrderData())
 {
 
 $token = Configuration::get('PAYNL_TOKEN');
-$serviceId = Configuration::get('PAYNL_SERVICE_ID');
+$service_id = Configuration::get('PAYNL_SERVICE_ID');
 
-$methodOrder = Configuration::get('PAYNL_PAYMENT_METHOD_ORDER');
-$methodOrder = @unserialize($methodOrder);
-if ($methodOrder == false)
+$method_order = Configuration::get('PAYNL_PAYMENT_METHOD_ORDER');
+$method_order = @unserialize($method_order);
+if ($method_order == false)
 
-$methodOrder = array();
+$method_order = array();
 
+$country_exceptions = Configuration::get('PAYNL_COUNTRY_EXCEPTIONS');
+$country_exceptions = @unserialize($country_exceptions);
+if ($country_exceptions == false)
 
-$countryExceptions = Configuration::get('PAYNL_COUNTRY_EXCEPTIONS');
-$countryExceptions = @unserialize($countryExceptions);
-if ($countryExceptions == false)
+$country_exceptions = array();
 
-$countryExceptions = array();
+$api_getservice = new PayApiGetservice();
+$api_getservice->setApiToken($token);
+$api_getservice->setServiceId($service_id);
 
-
-$apiGetservice = new PayApiGetservice();
-$apiGetservice->setApiToken($token);
-$apiGetservice->setServiceId($serviceId);
-
-$activeProfiles = $apiGetservice->doRequest();
-$activeProfiles = $activeProfiles['paymentOptions'];
-
+$active_profiles = $api_getservice->doRequest();
+$active_profiles = $active_profiles['paymentOptions'];
 
 $paymentaddress = new Address($params['cart']->id_address_invoice);
 $countryid = $paymentaddress->id_country;
 
 // Only the profiles of the target country should remain in this array :). (Only when the count is > 0, otherwise it might indicate problems)
-if (count($countryExceptions) > 0)
+if (count($country_exceptions) > 0)
 {
-if (Tools::getIsset($countryExceptions[$countryid]))
+if (Tools::getIsset($country_exceptions[$countryid]))
 {
-foreach ($activeProfiles as $id => $profile)
+foreach ($active_profiles as $id => $profile)
 {
-if (!Tools::getIsset($countryExceptions[$countryid][$profile['id']]))
+if (!Tools::getIsset($country_exceptions[$countryid][$profile['id']]))
 
-unset($activeProfiles[$id]);
+unset($active_profiles[$id]);
 
 }
 }
 }
 
 // Order remaining profiles based by order...
-asort($methodOrder);
+asort($method_order);
 
-$activeProfilesTemp = $activeProfiles;
-$activeProfiles = array();
+$active_profiles_temp = $active_profiles;
+$active_profiles = array();
 
-foreach (array_keys($methodOrder) as $iProfileId)
+foreach (array_keys($method_order) as $i_profile_id)
 {
-foreach ($activeProfilesTemp as $iKey => $arrActiveProfile)
+foreach ($active_profiles_temp as $i_key => $arr_active_profile)
 {
-if ($arrActiveProfile['id'] == $iProfileId)
+if ($arr_active_profile['id'] == $i_profile_id)
 {
-$arrActiveProfile['extraCosts'] = number_format($this->getExtraCosts($arrActiveProfile['id'], $intOrderAmount / 100), 2);
-array_push($activeProfiles, $arrActiveProfile);
-unset($activeProfilesTemp[$iKey]);
+$arr_active_profile['extraCosts'] = number_format($this->getExtraCosts($arr_active_profile['id'], $int_order_amount / 100), 2);
+array_push($active_profiles, $arr_active_profile);
+unset($active_profiles_temp[$i_key]);
 }
 }
 }
-//var_dump($activeProfiles);
+//var_dump($active_profiles);
 
 $this->context->smarty->assign(array(
 'this_path' => $this->_path,
-'profiles' => $activeProfiles,
+'profiles' => $active_profiles,
 //'banks' => $paynl->getIdealBanks(),
-'this_path_ssl' => (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/'.$this->name.'/'
+'this_path_ssl' => (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8')
+.__PS_BASE_URI__.'modules/'.$this->name.'/'
 ));
 
 return $this->display(_PS_MODULE_DIR_.'/'.$this->name.'/'.$this->name.'.php', 'views/templates/hook/payment.tpl');
@@ -331,7 +338,7 @@ if (Tools::getIsset(Tools::GETVALUE('submitPaynl')))
 if (!Tools::getIsset(Tools::GETVALUE('api')))
 Tools::setValue('api', 1);
 
-if (!count($this->_postErrors))
+if (!count($this->post_errors))
 {
 Configuration::updateValue('PAYNL_TOKEN', Tools::GETVALUE('paynltoken'));
 Configuration::updateValue('PAYNL_SERVICE_ID', Tools::GETVALUE('service_id'));
@@ -349,20 +356,20 @@ Configuration::updateValue('PAYNL_PAYMENT_METHOD_ORDER', serialize(Tools::GETVAL
 if (Tools::getIsset(Tools::GETVALUE('payExtraCosts')))
 {
 //kommas voor punten vervangen, en zorgen dat het allemaal getallen zijn
-$arrExtraCosts = array();
+$arr_extra_costs = array();
 
-foreach (Tools::GETVALUE('payExtraCosts') as $paymentMethodId => $paymentMethod)
+foreach (Tools::GETVALUE('payExtraCosts') as $payment_method_id => $payment_method)
 {
-foreach ($paymentMethod as $type => $value)
+foreach ($payment_method as $type => $value)
 {
 $value = str_replace(',', '.', $value);
 $value = $value * 1;
 if ($value == 0)
 $value = '';
-$arrExtraCosts[$paymentMethodId][$type] = $value;
+$arr_extra_costs[$payment_method_id][$type] = $value;
 }
 }
-Configuration::updateValue('PAYNL_PAYMENT_EXTRA_COSTS', serialize($arrExtraCosts));
+Configuration::updateValue('PAYNL_PAYMENT_EXTRA_COSTS', serialize($arr_extra_costs));
 }
 if (Tools::getIsset(Tools::GETVALUE('validateOnStart')))
 
@@ -394,12 +401,13 @@ $this->_html .= '
 
 public function displayErrors()
 {
-$nbErrors = count($this->_postErrors);
+$nb_errors = count($this->post_errors);
 $this->_html .= '
 <div class="alert error">
-  <h3>'.($nbErrors > 1 ? $this->l('There are') : $this->l('There is')).' '.$nbErrors.' '.($nbErrors > 1 ? $this->l('errors') : $this->l('error')).'</h3>
+  <h3>'.($nb_errors > 1 ? $this->l('There are') : $this->l('There is')).' '.$nb_errors.' '
+.($nb_errors > 1 ? $this->l('errors') : $this->l('error')).'</h3>
   <ol>';
-foreach ($this->_postErrors as $error)
+foreach ($this->post_errors as $error)
 $this->_html .= '<li>'.$error.'</li>';
 $this->_html .= '
   </ol>
@@ -416,144 +424,145 @@ $this->_html .= '
 
 public function displayFormSettings()
 {
-$arrConfig = array();
-$arrConfig[] = 'PAYNL_TOKEN';
-$arrConfig[] = 'PAYNL_SERVICE_ID';
-$arrConfig[] = 'PAYNL_WAIT';
-$arrConfig[] = 'PAYNL_SUCCESS';
-$arrConfig[] = 'PAYNL_AMOUNTNOTVALID';
-$arrConfig[] = 'PAYNL_CANCEL';
-$arrConfig[] = 'PAYNL_COUNTRY_EXCEPTIONS';
-$arrConfig[] = 'PAYNL_PAYMENT_METHOD_ORDER';
-$arrConfig[] = 'PAYNL_PAYMENT_EXTRA_COSTS';
-$arrConfig[] = 'PAYNL_VALIDATE_ON_START';
+$arr_config = array();
+$arr_config[] = 'PAYNL_TOKEN';
+$arr_config[] = 'PAYNL_SERVICE_ID';
+$arr_config[] = 'PAYNL_WAIT';
+$arr_config[] = 'PAYNL_SUCCESS';
+$arr_config[] = 'PAYNL_AMOUNTNOTVALID';
+$arr_config[] = 'PAYNL_CANCEL';
+$arr_config[] = 'PAYNL_COUNTRY_EXCEPTIONS';
+$arr_config[] = 'PAYNL_PAYMENT_METHOD_ORDER';
+$arr_config[] = 'PAYNL_PAYMENT_EXTRA_COSTS';
+$arr_config[] = 'PAYNL_VALIDATE_ON_START';
 
-$conf = Configuration::getMultiple($arrConfig);
+$conf = Configuration::getMultiple($arr_config);
 
+$paynltoken = array_key_exists('paynltoken', Tools::GETVALUE) ? Tools::GETVALUE('paynltoken')
+: (array_key_exists('PAYNL_TOKEN', $conf) ? $conf['PAYNL_TOKEN'] : '');
+$service_id = array_key_exists('service_id', Tools::GETVALUE) ? Tools::GETVALUE('service_id')
+: (array_key_exists('PAYNL_SERVICE_ID', $conf) ? $conf['PAYNL_SERVICE_ID'] : '');
 
-$paynltoken = array_key_exists('paynltoken', Tools::GETVALUE) ? Tools::GETVALUE('paynltoken') : (array_key_exists('PAYNL_TOKEN', $conf) ? $conf['PAYNL_TOKEN'] : '');
-$service_id = array_key_exists('service_id', Tools::GETVALUE) ? Tools::GETVALUE('service_id') : (array_key_exists('PAYNL_SERVICE_ID', $conf) ? $conf['PAYNL_SERVICE_ID'] : '');
-
-$wait = array_key_exists('wait', Tools::GETVALUE) ? Tools::GETVALUE('wait') : (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
-$success = array_key_exists('success', Tools::GETVALUE) ? Tools::GETVALUE('success') : (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
+$wait = array_key_exists('wait', Tools::GETVALUE) ? Tools::GETVALUE('wait')
+: (array_key_exists('PAYNL_WAIT', $conf) ? $conf['PAYNL_WAIT'] : '10');
+$success = array_key_exists('success', Tools::GETVALUE) ? Tools::GETVALUE('success')
+: (array_key_exists('PAYNL_SUCCESS', $conf) ? $conf['PAYNL_SUCCESS'] : '2');
 //$amountnotvalid = array_key_exists('amountnotvalid', Tools::GETVALUE) ? Tools::GETVALUE('amountnotvalid') : (array_key_exists('PAYNL_AMOUNTNOTVALID', $conf) ? $conf['PAYNL_AMOUNTNOTVALID'] : '1');
-$cancel = array_key_exists('cancel', Tools::GETVALUE) ? Tools::GETVALUE('cancel') : (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
+$cancel = array_key_exists('cancel', Tools::GETVALUE) ? Tools::GETVALUE('cancel')
+: (array_key_exists('PAYNL_CANCEL', $conf) ? $conf['PAYNL_CANCEL'] : '6');
 
 // Get states
 $states = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 
-$osWait = '<select name="wait">';
+$os_wait = '<select name="wait">';
 foreach ($states as $state)
 {
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $wait) ? ' selected' : '';
-$osWait .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$os_wait .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osWait .= '</select>';
-$osSuccess = '<select name="success">';
+$os_wait .= '</select>';
+$os_success = '<select name="success">';
 foreach ($states as $state)
 {
 if ($state['logable'] == 1)
 {
 $selected = ($state['id_order_state'] == $success) ? ' selected' : '';
-$osSuccess .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$os_success .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osSuccess .= '</select>';
+$os_success .= '</select>';
 
-$osCancel = '<select name="cancel">';
+$os_cancel = '<select name="cancel">';
 foreach ($states as $state)
 {
 if ($state['logable'] == 0)
 {
 $selected = ($state['id_order_state'] == $cancel) ? ' selected' : '';
-$osCancel .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
+$os_cancel .= '<option value="'.$state['id_order_state'].'"'.$selected.'>'.$state['name'].'</option>';
 }
 }
-$osCancel .= '</select>';
+$os_cancel .= '</select>';
 
-$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)($this->id));
+$countries = DB::getInstance()->ExecuteS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.int($this->id));
 foreach ($countries as $country)
 $this->country[$country['id_country']] = $country['id_country'];
 
 $exceptions = '';
 try {
 $token = Configuration::get('PAYNL_TOKEN');
-$serviceId = Configuration::get('PAYNL_SERVICE_ID');
+$service_id = Configuration::get('PAYNL_SERVICE_ID');
 
-$serviceApi = new PayApiGetservice();
-$serviceApi->setApiToken($token);
-$serviceApi->setServiceId($serviceId);
+$service_api = new PayApiGetservice();
+$service_api->setApiToken($token);
+$service_api->setServiceId($service_id);
 
-$profiles = $serviceApi->doRequest();
+$profiles = $service_api->doRequest();
 $profiles = $profiles['paymentOptions'];
 //var_dump($profiles);
 
 
 
-$countries = Country::getCountries((int)($this->context->cookie->id_lang));
+$countries = Country::getCountries(int($this->context->cookie->id_lang));
 
-
-
-
-$forceProfilesEnable = false;
-$profilesEnable = (array_key_exists('PAYNL_COUNTRY_EXCEPTIONS', $conf) ? $conf['PAYNL_COUNTRY_EXCEPTIONS'] : '');
-if (Tools::strlen($profilesEnable) == 0)
+$force_profiles_enable = false;
+$profiles_enable = (array_key_exists('PAYNL_COUNTRY_EXCEPTIONS', $conf) ? $conf['PAYNL_COUNTRY_EXCEPTIONS'] : '');
+if (Tools::strlen($profiles_enable) == 0)
 {
-$profilesEnable = array();
-$forceProfilesEnable = true;
+$profiles_enable = array();
+$force_profiles_enable = true;
 }
 else
 {
-$profilesEnable = @unserialize($profilesEnable);
-if ($profilesEnable == false)
+$profiles_enable = @unserialize($profiles_enable);
+if ($profiles_enable == false)
 {
-$forceProfilesEnable = true;
-$profilesEnable = array();
+$force_profiles_enable = true;
+$profiles_enable = array();
 }
 }
 
-$profilesOrder = (array_key_exists('PAYNL_PAYMENT_METHOD_ORDER', $conf) ? $conf['PAYNL_PAYMENT_METHOD_ORDER'] : '');
-$extraCosts = (array_key_exists('PAYNL_PAYMENT_EXTRA_COSTS', $conf) ? $conf['PAYNL_PAYMENT_EXTRA_COSTS'] : '');
-$validateOnStart = (array_key_exists('PAYNL_VALIDATE_ON_START', $conf) ? $conf['PAYNL_VALIDATE_ON_START'] : '');
+$profiles_order = (array_key_exists('PAYNL_PAYMENT_METHOD_ORDER', $conf) ? $conf['PAYNL_PAYMENT_METHOD_ORDER'] : '');
+$extra_costs = (array_key_exists('PAYNL_PAYMENT_EXTRA_COSTS', $conf) ? $conf['PAYNL_PAYMENT_EXTRA_COSTS'] : '');
+$validate_on_start = (array_key_exists('PAYNL_VALIDATE_ON_START', $conf) ? $conf['PAYNL_VALIDATE_ON_START'] : '');
 
-if (Tools::strlen($profilesOrder) == 0)
+if (Tools::strlen($profiles_order) == 0)
 
-$profilesOrder = array();
+$profiles_order = array();
 
 else
 {
-$profilesOrder = @unserialize($profilesOrder);
-if ($profilesOrder == false)
+$profiles_order = @unserialize($profiles_order);
+if ($profiles_order == false)
 
-$profilesOrder = array();
+$profiles_order = array();
 
 }
 
-if (Tools::strlen($extraCosts) == 0)
+if (Tools::strlen($extra_costs) == 0)
 
-$extraCosts = array();
+$extra_costs = array();
 
 else
 {
-$extraCosts = @unserialize($extraCosts);
-if ($extraCosts == false)
+$extra_costs = @unserialize($extra_costs);
+if ($extra_costs == false)
 
-$extraCosts = array();
+$extra_costs = array();
 
 }
-if (Tools::strlen($validateOnStart) == 0)
+if (Tools::strlen($validate_on_start) == 0)
 
-$validateOnStart = array();
+$validate_on_start = array();
 
 else
 {
-$validateOnStart = @unserialize($validateOnStart);
-if ($validateOnStart == false)
+$validate_on_start = @unserialize($validate_on_start);
+if ($validate_on_start == false)
 
-$validateOnStart = array();
+$validate_on_start = array();
 
 }
 
@@ -581,10 +590,10 @@ foreach ($profiles as $profile)
 {
 $exceptions .= '<td>';
 
-if (!$forceProfilesEnable)
+if (!$force_profiles_enable)
 {
 
-$exceptions .= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'.(Tools::getIsset($profilesEnable[$countryid][$profile['id']]) ? ' checked="checked"' : '').' />';
+$exceptions .= '<input type="checkbox" name="enaC['.$countryid.']['.$profile['id'].']" value="'.$profile['name'].'"'.(Tools::getIsset($profiles_enable[$countryid][$profile['id']]) ? ' checked="checked"' : '').' />';
 }
 else
 
@@ -611,40 +620,38 @@ $exceptions .= '<tr><td>'.$profile['name'].'</td><td>';
 
 $exceptions .= '<select name="enaO['.$profile['id'].']">';
 $value = '';
-if (Tools::getIsset($profilesOrder[$profile['id']]))
+if (Tools::getIsset($profiles_order[$profile['id']]))
 
-$value = $profilesOrder[$profile['id']];
+$value = $profiles_order[$profile['id']];
 
-
-$valueAmount = count($profiles);
-for ($i = 0; $i < $valueAmount; $i++)
+$value_amount = count($profiles);
+for ($i = 0; $i < $value_amount; $i++)
 {
 $selected = '';
 if ($value == $i)
 
 $selected = 'selected="selected"';
 
-
 $exceptions .= '<option value="'.$i.'" '.$selected.'>'.$this->l('Priority').' '.($i + 1).'</option>';
 }
 $exceptions .= '</select>';
 $exceptions .= '</td>';
 
-$fixed = @$extraCosts[$profile['id']]['fixed'];
-$percentage = @$extraCosts[$profile['id']]['percentage'];
-$max = @$extraCosts[$profile['id']]['max'];
+$fixed = @$extra_costs[$profile['id']]['fixed'];
+$percentage = @$extra_costs[$profile['id']]['percentage'];
+$max = @$extra_costs[$profile['id']]['max'];
 
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][fixed]" type="text" value="'.$fixed.'" /></td>';
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][percentage]"  type="text" value="'.$percentage.'" /></td>';
 $exceptions .= '<td><input name="payExtraCosts['.$profile['id'].'][max]"  type="text" value="'.$max.'" /></td>';
 
-$validateOnStartChecked = '';
-if (Tools::getIsset($validateOnStart[$profile['id']]) && $validateOnStart[$profile['id']] == 1)
+$validate_on_start_checked = '';
+if (Tools::getIsset($validate_on_start[$profile['id']]) && $validate_on_start[$profile['id']] == 1)
 
-$validateOnStartChecked = "checked='checked'";
+$validate_on_start_checked = "checked='checked'";
 
-
-$exceptions .= '<td><input type="hidden" name="validateOnStart['.$profile['id'].']" value="0" /><input '.$validateOnStartChecked.' name="validateOnStart['.$profile['id'].']"  type="checkbox" value="1" /></td>';
+$exceptions .= '<td><input type="hidden" name="validateOnStart['.$profile['id'].']" value="0" />
+<input '.$validate_on_start_checked.' name="validateOnStart['.$profile['id'].']"  type="checkbox" value="1" /></td>';
 
 $exceptions .= '</tr>';
 }
@@ -653,8 +660,6 @@ $exceptions .= '</table>';
 $exceptions = '<br/><h2 class="space">'.$this->l('Payment restrictions').'</h2>'.
 '<br />'.$this->l('Payment restrictions available after connecting to Pay.nl');
 }
-
-
 
 $this->_html .= '
 <form action="'.$_SERVER['REQUEST_URI'].'" method="post">
@@ -669,11 +674,12 @@ $this->_html .= '
   <hr>
   <br>
   <label>'.$this->l('Pending').'</label>
-  <div class="margin-form">'.$osWait.' Alleen van toepassing op betalingen waarbij extra kosten worden gerekend, de status gaat daarna meteen naar success</div>
+  <div class="margin-form">'.$os_wait.' Alleen van toepassing op betalingen waarbij extra kosten worden
+gerekend, de status gaat daarna meteen naar success</div>
   <label>'.$this->l('Success').'</label>
-  <div class="margin-form">'.$osSuccess.'</div>
+  <div class="margin-form">'.$os_success.'</div>
   <label>'.$this->l('Cancel').'</label>
-  <div class="margin-form">'.$osCancel.'</div>
+  <div class="margin-form">'.$os_cancel.'</div>
   <br />'
 .$exceptions.
 '<br /><center><input type="submit" name="submitPaynl" value="'.$this->l('Update settings').'" class="button" /></center>

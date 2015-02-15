@@ -76,12 +76,12 @@ return true;
 public static function processTransaction($transaction_id)
 {
 $token = Configuration::get('PAYNL_TOKEN');
-$serviceId = Configuration::get('PAYNL_SERVICE_ID');
+$service_id = Configuration::get('PAYNL_SERVICE_ID');
 
 $api_info = new PayApiInfo();
 
 $api_info->setApiToken($token);
-$api_info->setServiceId($serviceId);
+$api_info->setServiceId($service_id);
 $api_info->setTransactionId($transaction_id);
 
 $result = $api_info->doRequest();
@@ -97,7 +97,8 @@ $transaction = self::getTransaction($transaction_id);
 } catch (PayException $ex) {
 // transactie is niet gevonden... quickfix, we voegen hem opnieuw toe
 self::addTransaction($transaction_id, $result['paymentDetails']['paymentOptionId'],
-$result['paymentDetails']['amount'], $result['paymentDetails']['paidCurrency'], str_replace('CartId: ', '', $result['statsDetails']['extra1']), 'Inserted after not found');
+$result['paymentDetails']['amount'], $result['paymentDetails']['paidCurrency'],
+str_replace('CartId: ', '', $result['statsDetails']['extra1']), 'Inserted after not found');
 
 $transaction = self::getTransaction($transaction_id);
 }
