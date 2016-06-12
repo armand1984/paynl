@@ -686,7 +686,7 @@ gerekend, de status gaat daarna meteen naar success</div>
 
 protected function validateOrderData()
 {
-return true;
+return FALSE;
 }
 
 }
